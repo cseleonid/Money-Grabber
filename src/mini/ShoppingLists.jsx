@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { uid } from '../data.js'
-import ShoppingList from './ShoppingList.jsx'
+import ShoppingDetail from './ShoppingDetail.jsx'
 
 // 🛒 "Le mie liste": ogni lista della spesa è una scheda colorata con titolo,
 // numero di articoli da comprare, persone della lista e freccia per aprirla.
@@ -67,18 +67,21 @@ export default function ShoppingLists({ lists, items, store }) {
 
   const open = all.find((l) => l.id === openId)
   if (open) {
+    const members = open.members || []
     return (
-      <>
-        <div className="lists-top">
-          <button type="button" className="lists-back" onClick={() => setOpenId(null)}>‹ Le mie liste</button>
-        </div>
-        <div className={`list-banner lc-${open.color || 'pesca'}`}>
-          <h2>{open.name}</h2>
-          <span className="pill">{countOf(open.id)} articoli</span>
-          <Deco name={DECO_SETS[LIST_COLORS.indexOf(open.color) % DECO_SETS.length]?.[0] || 'mela'} className="d1" />
-        </div>
-        <ShoppingList items={items} listId={open.id} store={store} />
-      </>
+      <ShoppingDetail
+        key={open.id}
+        list={open}
+        items={items}
+        store={store}
+        onBack={() => setOpenId(null)}
+        avatars={members.length > 0 && (
+          <div className="shop-avatars">
+            {members.slice(0, 3).map((m, i) => <span key={i} className="avatar sm" style={{ background: avColor(m) }} title={m}>{initials(m)}</span>)}
+            {members.length > 3 && <span className="avatar sm more">+{members.length - 3}</span>}
+          </div>
+        )}
+      />
     )
   }
 

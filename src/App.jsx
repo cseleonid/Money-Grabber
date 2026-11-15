@@ -21,6 +21,8 @@ const MONTHS = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'L
 export default function App() {
   const [state, setState] = useState({ expenses: [], categories: DEFAULT_CATEGORIES, loading: true })
   const store = useRef(null)
+  // forza un nuovo render quando il salvataggio è pronto (serve ai mini-siti aperti da link diretto)
+  const [, setStoreReady] = useState(false)
   const [pendingDelete, setPendingDelete] = useState(null)
   const [month, setMonth] = useState(() => monthKey(todayISO()))
   const [filter, setFilter] = useState(null)
@@ -114,7 +116,7 @@ export default function App() {
 
   useEffect(() => {
     let alive = true
-    createStore((s) => alive && setState(s)).then((st) => { if (alive) store.current = st })
+    createStore((s) => alive && setState(s)).then((st) => { if (alive) { store.current = st; setStoreReady(true) } })
     return () => { alive = false }
   }, [])
 
