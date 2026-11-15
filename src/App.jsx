@@ -21,6 +21,15 @@ export default function App() {
   const [payFilter, setPayFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showMonths, setShowMonths] = useState(false)
+  const monthDdRef = useRef(null)
+  useEffect(() => {
+    if (!showMonths) return
+    const close = (e) => { if (monthDdRef.current && !monthDdRef.current.contains(e.target)) setShowMonths(false) }
+    const esc = (e) => { if (e.key === 'Escape') setShowMonths(false) }
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', esc) }
+  }, [showMonths])
 
   useEffect(() => {
     let alive = true
@@ -98,19 +107,20 @@ export default function App() {
       {/* 1. Grafico a torta per macro categorie */}
       <section className="card">
         <div className="card-head month-head">
-          <button
-            type="button"
-            className={`month-title-btn ${showMonths ? 'on' : ''}`}
-            onClick={() => setShowMonths((v) => !v)}
-            aria-expanded={showMonths}
-            aria-controls="month-grid"
-          >
-            <span className="month-title-text">Spese di <b>{monthLabel(month)}</b></span>
-            <svg className="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-        </div>
-        {showMonths && (
-          <div id="month-grid" className="month-panel">
+          <span className="month-prefix">Spese di</span>
+          <div className="month-dd" ref={monthDdRef}>
+            <button
+              type="button"
+              className={`month-title-btn ${showMonths ? 'on' : ''}`}
+              onClick={() => setShowMonths((v) => !v)}
+              aria-haspopup="true"
+              aria-expanded={showMonths}
+              aria-controls="month-grid"
+            >
+              <span className="month-title-text"><b>{monthLabel(month)}</b></span>
+            </button>
+            {showMonths && (
+              <div id="month-grid" className="month-panel month-dropdown" role="dialog" aria-label="Scegli il mese">
             <div className="year-row">
               <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -12))} aria-label="Anno precedente">‹</button>
               <span>{month.slice(0, 4)}</span>
@@ -133,8 +143,10 @@ export default function App() {
                 )
               })}
             </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {showSettings && (
           <div className="settings">

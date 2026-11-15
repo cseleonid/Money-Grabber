@@ -388,3 +388,29 @@ button, input, select { font: inherit; color: inherit; }
 .month-title-text b { font-weight: 800; }
 .chev { width: 22px; height: 22px; }
 @media (max-width: 420px) { .month-title-text { font-size: 1.6rem; } .chev { width: 20px; height: 20px; } }
+/* titolo: "Spese di" sopra, mese + anno come menù a tendina */
+.month-head { flex-direction: column; align-items: center; gap: 6px; }
+.month-prefix { font-size: 2rem; font-weight: 400; line-height: 1.15; color: var(--text); }
+.month-dd { position: relative; display: flex; justify-content: center; }
+.month-title-btn { padding: 2px var(--pad); }
+.month-title-text { white-space: nowrap; }
+.month-dropdown {
+  position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+  width: min(340px, calc(100vw - 48px)); z-index: 20; margin: 0;
+  background: var(--surface); box-shadow: 0 12px 40px rgba(0, 0, 0, .18), 0 2px 8px rgba(0, 0, 0, .08);
+}
+.month-dropdown .month-grid button { background: var(--bg); }
+.month-dropdown .month-grid button.on { background: var(--accent); }
+@media (max-width: 420px) { .month-prefix { font-size: 1.6rem; } }
+.card:first-of-type { padding-top: calc(var(--gap-pie)); }
+.month-head + .pie-wrap { margin-top: calc(var(--gap-pie) - 16px); }
+:root { --raised: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --raised: #2a2a28; } }
+:root[data-theme="dark"] { --raised: #2a2a28; }
+.month-dropdown { background: var(--raised); }
+.month-dropdown .month-grid button:not(.on) { background: var(--surface); }
+/* via la scritta "Passaggio X di 5": restano i pallini (testo solo per screen reader) */
+.wizard-step { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wizard-top { min-height: 0; }
+.wizard-top:not(:has(.back)) { display: none; }
+.wizard-dots { margin-top: 4px; }
