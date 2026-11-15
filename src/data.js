@@ -98,6 +98,7 @@ export async function createStore(onState) {
       patchExpense: (id, p) => commit({ ...state, expenses: state.expenses.map((e) => (e.id === id ? { ...e, ...p } : e)) }),
       removeExpense: (id) => commit({ ...state, expenses: state.expenses.filter((e) => e.id !== id) }),
       setCategories: (categories) => commit({ ...state, categories }),
+      setLayout: (layout) => commit({ ...state, layout }),
       addItem: (kind, item) => commit(withList(kind, (l) => [...l, item])),
       patchItem: (kind, id, p) => commit(withList(kind, (l) => l.map((x) => (x.id === id ? { ...x, ...p } : x)))),
       removeItem: (kind, id) => commit(withList(kind, (l) => l.filter((x) => x.id !== id))),
@@ -117,15 +118,16 @@ export async function createStore(onState) {
         const expenses = []
         const lists = emptyLists()
         let categories = state.categories
+        let layout = state.layout ?? null
         snap.docs.forEach((d) => {
           const data = d.data()
           if (!data) return
-          if (d.id === 'settings') { categories = data.categories ?? DEFAULT_CATEGORIES; return }
+          if (d.id === 'settings') { categories = data.categories ?? DEFAULT_CATEGORIES; layout = data.layout ?? null; return }
           if (d.id.startsWith('exp-')) { expenses.push({ ...data, id: d.id }); return }
           const kind = d.id.split('-')[0]
           if (lists[kind]) lists[kind].push({ ...data, id: d.id })
         })
-        state = { expenses, categories, lists, loading: false }
+        state = { expenses, categories, lists, layout, loading: false }
         emit()
         clearTimeout(timer)
         resolve()
@@ -159,7 +161,11 @@ export async function createStore(onState) {
     },
     setCategories: (categories) => {
       state = { ...state, categories }; emit()
-      settingsRef.set({ categories }).catch(fail)
+      settingsRef.set({ categories, ...(state.layout ? { layout: state.layout } : {}) }).catch(fail)
+    },
+    setLayout: (layout) => {
+      state = { ...state, layout }; emit()
+      settingsRef.set({ categories: state.categories, layout }).catch(fail)
     },
     addItem: (kind, item) => {
       const id = `${kind}-${item.id}`

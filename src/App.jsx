@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
 import { CategoryIcon } from './icons.jsx'
 import AddWizard from './AddWizard.jsx'
+import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingList from './mini/ShoppingList.jsx'
@@ -172,7 +173,11 @@ export default function App() {
       {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
       {state.loading && <p className="empty-msg">Caricamento delle tue spese…</p>}
 
-      {/* 1. Grafico a torta per macro categorie */}
+        <MovableBoxes
+          layout={state.layout}
+          onChange={(l) => store.current?.setLayout(l)}
+          blocks={{
+            grafico: (<>
       <section className="card">
         <div className="card-head month-head">
           <span className="month-prefix">Spese di</span>
@@ -237,8 +242,8 @@ export default function App() {
           <span className="ps-item"><b>Carta</b> {formatEur(total - walletTotal)}</span><span className="ps-sep" aria-hidden="true">·</span><span className="ps-item"><b>Portafoglio</b> {formatEur(walletTotal)}</span>
         </p>
       </section>
-
-      {/* 1b. Grafico dedicato al portafoglio */}
+            </>),
+            portafoglio: (<>
       <section className="card wallet-card">
         <div className="card-head">
           <h2>👛 Portafoglio · {monthLabel(month)}</h2>
@@ -256,15 +261,15 @@ export default function App() {
           onSelect={(id) => { setFilter(id); setPayFilter(id ? 'portafoglio' : null) }}
         />
       </section>
-
-      {/* Inserimento a passaggi */}
+            </>),
+            aggiungi: (<>
       <AddWizard
         categories={categories}
         payments={PAYMENTS}
         onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
       />
-
-      {/* 2. Lista spese */}
+            </>),
+            lista: (<>
       <section className="card">
         <div className="card-head">
           <h2>
@@ -318,8 +323,8 @@ export default function App() {
           </ul>
         )}
       </section>
-
-      {/* 3. Box spese superflue da controllare */}
+            </>),
+            superflue: (<>
       <section className="card superflue">
         <div className="card-head">
           <h2>Spese superflue da controllare</h2>
@@ -366,6 +371,9 @@ export default function App() {
         )}
         <p className="hint">Spunta una spesa quando l'hai controllata (es. abbonamento disdetto o confermato).</p>
       </section>
+            </>),
+          }}
+        />
         </>)}
       </div>
 
