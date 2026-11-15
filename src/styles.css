@@ -346,3 +346,8 @@ button, input, select { font: inherit; color: inherit; }
 .month-head { display: flex !important; justify-content: center; }
 .top { flex-wrap: nowrap; align-items: center; }
 .top .gear { margin-left: auto; }
+/* nomi categoria sempre pieni; l'importo si accende quando c'è una cifra */
+.legend-item, .legend-item.empty { color: var(--text); }
+.legend-item .legend-name, .legend-item.empty .legend-name { color: var(--text); font-weight: 600; }
+.legend-item.empty .legend-val { color: var(--text-3); }
+.legend-item:not(.empty) .legend-val { color: var(--text); font-weight: 600; }
