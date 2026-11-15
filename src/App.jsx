@@ -91,11 +91,9 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="top">
-        <button type="button" className="menu-btn" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" /></svg>
-        </button>
-      </header>
+      <button type="button" className="side-tab" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
+        <span>tester</span>
+      </button>
       {menuOpen && <div className="side-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
       <aside id="side-menu" className={`side ${menuOpen ? 'open' : ''}`} aria-label="Menu">
         <div className="side-head">
