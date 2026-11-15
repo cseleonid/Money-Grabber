@@ -485,3 +485,8 @@ button, input, select { font: inherit; color: inherit; }
 /* titolo dell'inserimento grande come "Novembre 2026" */
 .wizard h2#wizard-title { font-size: 2rem; font-weight: 800; line-height: 1.15; letter-spacing: normal; }
 @media (max-width: 420px) { .wizard h2#wizard-title { font-size: 1.6rem; } }
+/* proporzioni: spazio tra i riquadri = padding laterale della scheda */
+:root { --card-pad: 20px; }
+.card { padding-left: var(--card-pad); padding-right: var(--card-pad); }
+.wizard { padding: var(--card-pad); gap: var(--card-pad); }
+.choice-grid, .choice-grid.two, .choice-grid:not(.two) { gap: var(--card-pad) !important; }
