@@ -23,7 +23,7 @@ function arcPath(a0, a1) {
   return `M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${INNER},${INNER} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-export default function PieChart({ data, total, selected, onSelect }) {
+export default function PieChart({ data, total, selected, onSelect, hideEmpty = false }) {
   const [hover, setHover] = useState(null)
   const slices = data.filter((d) => d.value > 0)
 
@@ -83,7 +83,7 @@ export default function PieChart({ data, total, selected, onSelect }) {
       </div>
 
       <ul className="legend">
-        {data.map((d) => {
+        {(hideEmpty ? data.filter((d) => d.value > 0) : data).map((d) => {
           const pct = total ? (d.value / total) * 100 : 0
           return (
             <li key={d.id}>

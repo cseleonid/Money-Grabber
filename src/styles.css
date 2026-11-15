@@ -143,3 +143,7 @@ button, input, select { font: inherit; color: inherit; }
   --series-5: #d55181; --series-6: #0ca30c; --series-7: #9085e9; --series-8: #e66767;
 }
 .app { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.pay-toggle { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.pay-toggle button { padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; }
+.pay-toggle button.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 600; }
+.pay-split { margin: 12px 0 0; color: var(--text-2); font-size: .9rem; text-align: center; font-variant-numeric: tabular-nums; }

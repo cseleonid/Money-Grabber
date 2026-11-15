@@ -4,7 +4,10 @@ import {
   createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO, uid,
 } from './data.js'
 
-const emptyForm = () => ({ description: '', amount: '', date: todayISO(), categoryId: 'alimentari', superflua: false })
+const emptyForm = () => ({ description: '', amount: '', date: todayISO(), categoryId: 'alimentari', payment: 'carta', superflua: false })
+
+export const PAYMENTS = { carta: { label: 'Carta', icon: '💳' }, portafoglio: { label: 'Portafoglio', icon: '👛' } }
+const paymentOf = (e) => (e.payment === 'portafoglio' ? 'portafoglio' : 'carta')
 
 export default function App() {
   const [state, setState] = useState({ expenses: [], categories: DEFAULT_CATEGORIES, loading: true })
@@ -13,6 +16,7 @@ export default function App() {
   const [month, setMonth] = useState(() => monthKey(todayISO()))
   const [form, setForm] = useState(emptyForm)
   const [filter, setFilter] = useState(null)
+  const [payFilter, setPayFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
@@ -37,7 +41,16 @@ export default function App() {
     value: monthExpenses.filter((e) => e.categoryId === c.id).reduce((s, e) => s + e.amount, 0),
   }))
 
-  const listed = filter ? monthExpenses.filter((e) => e.categoryId === filter) : monthExpenses
+  const walletExpenses = monthExpenses.filter((e) => paymentOf(e) === 'portafoglio')
+  const walletTotal = walletExpenses.reduce((s, e) => s + e.amount, 0)
+  const walletByCategory = categories.map((c) => ({
+    ...c,
+    value: walletExpenses.filter((e) => e.categoryId === c.id).reduce((s, e) => s + e.amount, 0),
+  }))
+
+  const listed = monthExpenses
+    .filter((e) => !filter || e.categoryId === filter)
+    .filter((e) => !payFilter || paymentOf(e) === payFilter)
   const superflue = monthExpenses.filter(isSuperflua)
   const superflueTotal = superflue.reduce((s, e) => s + e.amount, 0)
   const daControllare = superflue.filter((e) => !e.controllata)
@@ -52,13 +65,14 @@ export default function App() {
       amount: Math.round(amount * 100) / 100,
       date: form.date,
       categoryId: form.categoryId,
+      payment: form.payment,
       superflua: form.superflua,
       controllata: false,
     }
     if (!store.current) return
     store.current.addExpense(expense)
     setMonth(monthKey(form.date))
-    setForm((f) => ({ ...emptyForm(), date: f.date, categoryId: f.categoryId }))
+    setForm((f) => ({ ...emptyForm(), date: f.date, categoryId: f.categoryId, payment: f.payment }))
   }
 
   const patchExpense = (id, patch) => store.current?.patchExpense(id, patch)
@@ -116,7 +130,29 @@ export default function App() {
           </div>
         )}
 
-        <PieChart data={byCategory} total={total} selected={filter} onSelect={setFilter} />
+        <PieChart data={byCategory} total={total} selected={filter} onSelect={(id) => { setFilter(id); setPayFilter(null) }} />
+        <p className="pay-split">
+          💳 Carta {formatEur(total - walletTotal)} · 👛 Portafoglio {formatEur(walletTotal)}
+        </p>
+      </section>
+
+      {/* 1b. Grafico dedicato al portafoglio */}
+      <section className="card">
+        <div className="card-head">
+          <h2>👛 Portafoglio · {monthLabel(month)}</h2>
+          {walletExpenses.length > 0 && (
+            <button type="button" className="link" onClick={() => { setPayFilter('portafoglio'); setFilter(null) }}>
+              Vedi in lista
+            </button>
+          )}
+        </div>
+        <PieChart
+          data={walletByCategory}
+          hideEmpty
+          total={walletTotal}
+          selected={payFilter === 'portafoglio' ? filter : null}
+          onSelect={(id) => { setFilter(id); setPayFilter(id ? 'portafoglio' : null) }}
+        />
       </section>
 
       {/* Inserimento */}
@@ -140,6 +176,20 @@ export default function App() {
           <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
+          <div className="pay-toggle" role="radiogroup" aria-label="Metodo di pagamento">
+            {Object.entries(PAYMENTS).map(([k, p]) => (
+              <button
+                key={k}
+                type="button"
+                role="radio"
+                aria-checked={form.payment === k}
+                className={form.payment === k ? 'on' : ''}
+                onClick={() => setForm({ ...form, payment: k })}
+              >
+                {p.icon} {p.label}
+              </button>
+            ))}
+          </div>
           <label className="check">
             <input
               type="checkbox"
@@ -156,11 +206,16 @@ export default function App() {
       {/* 2. Lista spese */}
       <section className="card">
         <div className="card-head">
-          <h2>Lista spese {filter && <small>· {catById[filter]?.name}</small>}</h2>
-          {filter && <button type="button" className="link" onClick={() => setFilter(null)}>Mostra tutte</button>}
+          <h2>
+            Lista spese {filter && <small>· {catById[filter]?.name}</small>}
+            {payFilter && <small> · {PAYMENTS[payFilter].icon} {PAYMENTS[payFilter].label}</small>}
+          </h2>
+          {(filter || payFilter) && (
+            <button type="button" className="link" onClick={() => { setFilter(null); setPayFilter(null) }}>Mostra tutte</button>
+          )}
         </div>
         {listed.length === 0 ? (
-          <p className="empty-msg">Nessuna spesa {filter ? 'in questa categoria' : 'in questo mese'}.</p>
+          <p className="empty-msg">Nessuna spesa {filter || payFilter ? 'con questo filtro' : 'in questo mese'}.</p>
         ) : (
           <ul className="expense-list">
             {listed.map((e) => {
@@ -172,7 +227,7 @@ export default function App() {
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
-                      {new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'}
+                      {new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · {PAYMENTS[paymentOf(e)].icon}
                       {isSuperflua(e) && <span className="badge">superflua</span>}
                     </span>
                   </div>
@@ -239,7 +294,7 @@ export default function App() {
                 <div className="expense-main">
                   <span className="expense-desc">{e.description}</span>
                   <span className="expense-meta">
-                    {catById[e.categoryId]?.name} · {e.superflua ? 'segnata a mano' : 'auto per categoria'}
+                    {catById[e.categoryId]?.name} · {PAYMENTS[paymentOf(e)].icon} · {e.superflua ? 'segnata a mano' : 'auto per categoria'}
                   </span>
                 </div>
                 <span className="expense-amount">{formatEur(e.amount)}</span>
