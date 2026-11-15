@@ -2,6 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
 import { CategoryIcon } from './icons.jsx'
 import AddWizard from './AddWizard.jsx'
+import { SECTIONS, sectionFromHash } from './sections.js'
+import CalendarView from './mini/CalendarView.jsx'
+import ShoppingList from './mini/ShoppingList.jsx'
+import TodoList from './mini/TodoList.jsx'
+import SharedExpenses from './mini/SharedExpenses.jsx'
 import {
   createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO,
 } from './data.js'
@@ -22,6 +27,33 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [showMonths, setShowMonths] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  // sezione corrente (mini-sito) dal pallino 🐙, sincronizzata con #hash
+  const [section, setSection] = useState(sectionFromHash)
+  const [octoOpen, setOctoOpen] = useState(false)
+  const octoRef = useRef(null)
+  useEffect(() => {
+    const onHash = () => setSection(sectionFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  useEffect(() => {
+    document.documentElement.dataset.section = section
+    window.scrollTo?.({ top: 0 })
+  }, [section])
+  useEffect(() => {
+    if (!octoOpen) return
+    const close = (e) => { if (octoRef.current && !octoRef.current.contains(e.target)) setOctoOpen(false) }
+    const esc = (e) => { if (e.key === 'Escape') setOctoOpen(false) }
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', esc) }
+  }, [octoOpen])
+  const openSection = (id) => {
+    setSection(id)
+    setOctoOpen(false)
+    try { history.replaceState(null, '', id === 'personale' ? location.pathname + location.search : '#' + id) } catch { location.hash = id }
+  }
+  const current = SECTIONS.find((x) => x.id === section)
   useEffect(() => {
     if (!menuOpen) return
     const esc = (e) => { if (e.key === 'Escape') setMenuOpen(false) }
@@ -91,9 +123,9 @@ export default function App() {
 
   return (
     <div className="app">
-      <button type="button" className="side-tab" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
+      {section === 'personale' && <button type="button" className="side-tab" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
         <span>tester</span>
-      </button>
+      </button>}
       {menuOpen && <div className="side-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
       <aside id="side-menu" className={`side ${menuOpen ? 'open' : ''}`} aria-label="Menu">
         <div className="side-head">
@@ -122,6 +154,20 @@ export default function App() {
         </nav>
       </aside>
       <div className="main">
+        {section !== 'personale' && (
+          <header className="section-head">
+            <span className="section-emoji" aria-hidden="true">{current.emoji}</span>
+            <div>
+              <h1>{current.name}</h1>
+              <p>{current.hint}</p>
+            </div>
+          </header>
+        )}
+        {section === 'calendario' && <CalendarView items={state.lists?.cal || []} store={store.current} />}
+        {section === 'spesa' && <ShoppingList items={state.lists?.shop || []} store={store.current} />}
+        {section === 'todo' && <TodoList items={state.lists?.todo || []} store={store.current} />}
+        {section === 'condivise' && <SharedExpenses people={state.lists?.ppl || []} expenses={state.lists?.shx || []} store={store.current} />}
+        {section === 'personale' && (<>
 
       {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
       {state.loading && <p className="empty-msg">Caricamento delle tue spese…</p>}
@@ -320,6 +366,30 @@ export default function App() {
         )}
         <p className="hint">Spunta una spesa quando l'hai controllata (es. abbonamento disdetto o confermato).</p>
       </section>
+        </>)}
+      </div>
+
+      {/* pallino 🐙 con i mini-siti */}
+      <div className={`octo ${octoOpen ? 'open' : ''}`} ref={octoRef}>
+        {octoOpen && (
+          <nav className="octo-menu" aria-label="Sezioni">
+            {SECTIONS.map((x) => (
+              <button
+                key={x.id}
+                type="button"
+                className={`octo-item sec-${x.id} ${x.id === section ? 'on' : ''}`}
+                aria-current={x.id === section ? 'page' : undefined}
+                onClick={() => openSection(x.id)}
+              >
+                <span className="octo-emoji" aria-hidden="true">{x.emoji}</span>
+                <span className="octo-name">{x.name}</span>
+              </button>
+            ))}
+          </nav>
+        )}
+        <button type="button" className="octo-btn" onClick={() => setOctoOpen((v) => !v)} aria-label="Apri le sezioni" aria-expanded={octoOpen}>
+          <span aria-hidden="true">🐙</span>
+        </button>
       </div>
     </div>
   )

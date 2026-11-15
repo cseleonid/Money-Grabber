@@ -69,14 +69,25 @@ export const uid = () =>
 // Pubblicata come Artifact su claude.ai: dati salvati nel tuo account
 // (capability `db`, area privata per utente) -> stessi dati da telefono e PC.
 // In locale (npm run dev) o se il db non è disponibile: localStorage.
+//
+// Oltre alle spese ("exp-"), ogni mini-sito ha la sua lista di documenti,
+// identificata da un prefisso nell'id del documento:
+//   cal-  eventi del calendario      shop- lista della spesa
+//   todo- attività                   shx-  spese condivise    ppl- persone
 // ---------------------------------------------------------------------------
+export const LIST_KINDS = ['cal', 'shop', 'todo', 'shx', 'ppl']
+const emptyLists = () => Object.fromEntries(LIST_KINDS.map((k) => [k, []]))
+
 export async function createStore(onState) {
   let state = loadState()
+  state = { ...state, lists: { ...emptyLists(), ...(state.lists || {}) } }
   const emit = () => onState({ ...state })
 
   const db = window.claude?.use ? await window.claude.use('db').catch(() => null) : null
   const user = db && window.claude?.use ? await window.claude.use('user').catch(() => null) : null
   const uidUser = user ? await user.id().catch(() => null) : null
+
+  const withList = (kind, fn) => ({ ...state, lists: { ...state.lists, [kind]: fn(state.lists[kind] || []) } })
 
   if (!db || !uidUser) {
     emit()
@@ -87,13 +98,16 @@ export async function createStore(onState) {
       patchExpense: (id, p) => commit({ ...state, expenses: state.expenses.map((e) => (e.id === id ? { ...e, ...p } : e)) }),
       removeExpense: (id) => commit({ ...state, expenses: state.expenses.filter((e) => e.id !== id) }),
       setCategories: (categories) => commit({ ...state, categories }),
+      addItem: (kind, item) => commit(withList(kind, (l) => [...l, item])),
+      patchItem: (kind, id, p) => commit(withList(kind, (l) => l.map((x) => (x.id === id ? { ...x, ...p } : x)))),
+      removeItem: (kind, id) => commit(withList(kind, (l) => l.filter((x) => x.id !== id))),
     }
   }
 
   const base = `data/users/${uidUser}`
   const col = db.collection(base)
   const settingsRef = db.doc(`${base}/settings`)
-  state = { expenses: [], categories: DEFAULT_CATEGORIES, loading: true }
+  state = { expenses: [], categories: DEFAULT_CATEGORIES, lists: emptyLists(), loading: true }
   emit()
 
   await new Promise((resolve) => {
@@ -101,14 +115,17 @@ export async function createStore(onState) {
     col.onSnapshot(
       (snap) => {
         const expenses = []
+        const lists = emptyLists()
         let categories = state.categories
         snap.docs.forEach((d) => {
           const data = d.data()
           if (!data) return
-          if (d.id === 'settings') categories = data.categories ?? DEFAULT_CATEGORIES
-          else if (d.id.startsWith('exp-')) expenses.push({ ...data, id: d.id })
+          if (d.id === 'settings') { categories = data.categories ?? DEFAULT_CATEGORIES; return }
+          if (d.id.startsWith('exp-')) { expenses.push({ ...data, id: d.id }); return }
+          const kind = d.id.split('-')[0]
+          if (lists[kind]) lists[kind].push({ ...data, id: d.id })
         })
-        state = { expenses, categories, loading: false }
+        state = { expenses, categories, lists, loading: false }
         emit()
         clearTimeout(timer)
         resolve()
@@ -143,6 +160,19 @@ export async function createStore(onState) {
     setCategories: (categories) => {
       state = { ...state, categories }; emit()
       settingsRef.set({ categories }).catch(fail)
+    },
+    addItem: (kind, item) => {
+      const id = `${kind}-${item.id}`
+      state = withList(kind, (l) => [...l, { ...item, id }]); emit()
+      db.doc(`${base}/${id}`).set(strip(item)).catch(fail)
+    },
+    patchItem: (kind, id, p) => {
+      state = withList(kind, (l) => l.map((x) => (x.id === id ? { ...x, ...p } : x))); emit()
+      db.doc(`${base}/${id}`).update(p).catch(fail)
+    },
+    removeItem: (kind, id) => {
+      state = withList(kind, (l) => l.filter((x) => x.id !== id)); emit()
+      db.doc(`${base}/${id}`).delete().catch(fail)
     },
   }
 }

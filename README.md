@@ -7,7 +7,9 @@ App React + Vite per tenere traccia delle spese mensili.
 - **Box "Spese superflue da controllare"** in fondo: include le spese segnate a mano e quelle delle categorie superflue in automatico (di default *Svago* e *Abbonamenti*, modificabile da "Gestisci categorie"). Spunta ogni spesa quando l'hai controllata.
 - Selettore del mese per consultare lo storico.
 
-I dati restano nel browser (localStorage).
+Il pallino 🐙 in basso a destra apre le sezioni, ognuna con il proprio colore:
+💰 Personale (questa pagina), 📅 Calendario, 🛒 Lista della spesa, ✅ To Do List, 🤝 Spese condivise.
+Ogni sezione ha un link diretto (`#calendario`, `#spesa`, `#todo`, `#condivise`).
 
 ## Avvio
 
