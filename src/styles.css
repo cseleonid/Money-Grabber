@@ -358,3 +358,6 @@ button, input, select { font: inherit; color: inherit; }
 .top .gear svg { width: 28px; height: 28px; stroke-width: 1.6; }
 .top .gear:hover, .top .gear.on { color: var(--text); }
 @media (max-width: 560px) { .top .gear svg { width: 26px; height: 26px; } }
+/* più spazio tra il titolo e il grafico */
+.month-head + .pie-wrap, .month-panel + .pie-wrap, .card-head + .pie-wrap { margin-top: 36px; }
+.pie-wrap { row-gap: 32px; }

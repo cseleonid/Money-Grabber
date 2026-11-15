@@ -6,7 +6,7 @@ import { CategoryIcon } from './icons.jsx'
 // tooltip al passaggio del mouse/tap, legenda con importi e percentuali.
 const SIZE = 220
 const R = 100
-const INNER = 80
+const INNER = 91
 const C = SIZE / 2
 
 function polar(r, a) {
