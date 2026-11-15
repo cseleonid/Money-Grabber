@@ -309,3 +309,36 @@ button, input, select { font: inherit; color: inherit; }
 .legend-item { padding-inline: 14px; }
 .month-grid button { padding-block: 11px; }
 .pie-slice { stroke-linejoin: round; }
+
+/* padding universale: il testo non tocca mai i bordi */
+:root { --pad: 14px; --pad-sm: 10px; }
+.card { padding: calc(var(--pad) + 6px); }
+.choice { padding: var(--pad-sm) var(--pad); }
+.choice.big { padding: var(--pad); }
+.month-grid button { padding: var(--pad-sm) var(--pad-sm); }
+.month-panel, .settings, .wizard-done, .error-msg { padding: var(--pad); }
+.super-stats > div { padding: var(--pad-sm) var(--pad); }
+.summary > div { padding: var(--pad-sm) var(--pad); }
+.amount-field { padding: var(--pad-sm) var(--pad); }
+.field { padding: var(--pad-sm) var(--pad); }
+.chip { padding: var(--pad-sm) calc(var(--pad) + 4px); }
+.legend-item { padding: 8px var(--pad); }
+.primary { padding: 12px calc(var(--pad) + 6px); }
+.month-title-btn { padding: 6px var(--pad); }
+.choice span, .month-grid button, .stat-label { overflow-wrap: anywhere; }
+
+@media (max-width: 420px) {
+  /* categorie: 2 colonne, icona accanto al nome */
+  .choice-grid:not(.two) { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .choice-grid:not(.two) .choice { flex-direction: row; justify-content: flex-start; gap: 10px; min-height: 56px; font-size: .85rem; text-align: left; }
+  /* mesi: 3 colonne */
+  .month-grid { grid-template-columns: repeat(3, 1fr); }
+  .month-grid button { font-size: .85rem; }
+  .super-stats { gap: 6px; }
+  .super-stats > div { padding: var(--pad-sm); }
+}
+.choice span { overflow-wrap: normal; }
+@media (max-width: 420px) {
+  .choice-grid:not(.two) .choice { gap: 8px; padding: var(--pad-sm) 12px; font-size: .8rem; }
+  .choice-grid:not(.two) .choice .cat-icon { width: 26px; height: 26px; }
+}
