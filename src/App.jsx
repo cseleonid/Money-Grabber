@@ -96,11 +96,6 @@ export default function App() {
     <div className="app">
       <header className="top">
         <h1>Money Grabber</h1>
-        <div className="month-nav">
-          <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -1))} aria-label="Mese precedente">‹</button>
-          <input type="month" value={month} onChange={(e) => e.target.value && setMonth(e.target.value)} aria-label="Mese" />
-          <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 1))} aria-label="Mese successivo">›</button>
-        </div>
       </header>
 
       {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
@@ -109,7 +104,11 @@ export default function App() {
       {/* 1. Grafico a torta per macro categorie */}
       <section className="card">
         <div className="card-head">
-          <h2>Spese di {monthLabel(month)}</h2>
+          <div className="month-nav">
+            <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -1))} aria-label="Mese precedente">‹</button>
+            <input type="month" value={month} onChange={(e) => e.target.value && setMonth(e.target.value)} aria-label="Mese" />
+            <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 1))} aria-label="Mese successivo">›</button>
+          </div>
           <button
             type="button"
             className={`gear ${showSettings ? 'on' : ''}`}
@@ -124,6 +123,7 @@ export default function App() {
             </svg>
           </button>
         </div>
+        <h2 className="month-title">Spese di {monthLabel(month)}</h2>
 
         {showSettings && (
           <div className="settings">

@@ -169,3 +169,6 @@ button, input, select { font: inherit; color: inherit; }
 .icon-chip { width: 44px; height: 44px; border-radius: 12px; }
 .legend-item { padding: 7px 8px; gap: 12px; }
 .pay-split b { color: var(--text); font-weight: 700; }
+.card .month-nav { margin-bottom: 4px; }
+.month-title { margin-top: 10px !important; }
+.month-nav input { min-width: 0; }
