@@ -334,7 +334,7 @@ export default function App() {
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
-                      {new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · <PaymentIcon id={paymentOf(e)} size={14} />
+                      {e.noDate ? 'senza data' : new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · <PaymentIcon id={paymentOf(e)} size={14} />
                       {isSuperflua(e) && <span className="badge">superflua</span>}
                     </span>
                   </div>

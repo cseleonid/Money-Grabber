@@ -18,7 +18,7 @@ const fmtDate = (iso) =>
   new Date(iso + 'T00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })
 
 export default function AddWizard({ categories, payments, onAdd }) {
-  const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), description: '', superflua: false })
+  const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), noDate: false, description: '', superflua: false })
   const [step, setStep] = useState(1)
   const [d, setD] = useState(blank)
   const [done, setDone] = useState(null)
@@ -65,6 +65,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
       description: d.description.trim() || cat.name,
       amount: Math.round(amount * 100) / 100,
       date: d.date,
+      ...(d.noDate ? { noDate: true } : {}),
       categoryId: d.categoryId,
       payment: d.payment,
       superflua: d.superflua,
@@ -156,21 +157,26 @@ export default function AddWizard({ categories, payments, onAdd }) {
       )}
 
       {step === 4 && (
-        <div className="wizard-form">
-          <div className="chips">
+        <div className="wizard-form date-step">
+          <div className={`chips ${d.noDate ? 'off' : ''}`}>
             {[['Oggi', 0], ['Ieri', -1], ['2 giorni fa', -2]].map(([label, n]) => (
               <button
                 key={label}
                 type="button"
-                className={`chip ${d.date === isoShift(n) ? 'on' : ''}`}
-                onClick={() => choose({ date: isoShift(n) }, 5)}
+                disabled={d.noDate}
+                className={`chip ${!d.noDate && d.date === isoShift(n) ? 'on' : ''}`}
+                onClick={() => choose({ date: isoShift(n), noDate: false }, 5)}
               >
                 {label}
               </button>
             ))}
           </div>
-          <label className="field-label" htmlFor="wiz-date">Oppure scegli una data</label>
-          <input id="wiz-date" type="date" className="field" value={d.date} onChange={(e) => e.target.value && setD({ ...d, date: e.target.value })} />
+          <label className={`field-label ${d.noDate ? 'off' : ''}`} htmlFor="wiz-date">Oppure scegli una data</label>
+          <input id="wiz-date" type="date" className="field" disabled={d.noDate} value={d.date} onChange={(e) => e.target.value && setD({ ...d, date: e.target.value })} />
+          <label className="check flag">
+            <input type="checkbox" checked={!!d.noDate} onChange={(e) => setD({ ...d, noDate: e.target.checked, date: e.target.checked ? todayISO() : d.date })} />
+            Non ricordo la data
+          </label>
           <button type="button" className="primary" onClick={() => setStep(5)}>Avanti</button>
         </div>
       )}
@@ -181,7 +187,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
             <div><dt>Pagamento</dt><dd><PaymentIcon id={d.payment} size={20} /> {payments[d.payment].label}</dd></div>
             <div><dt>Categoria</dt><dd><CategoryIcon id={cat.id} slot={cat.slot} size={20} /> {cat.name}</dd></div>
             <div><dt>Importo</dt><dd className="num">{formatEur(amount)}</dd></div>
-            <div><dt>Data</dt><dd>{fmtDate(d.date)}</dd></div>
+            <div><dt>Data</dt><dd>{d.noDate ? `Non ricordata · ${new Date(d.date + 'T00:00').toLocaleDateString('it-IT', { month: 'long' })}` : fmtDate(d.date)}</dd></div>
           </dl>
           <label className="field-label" htmlFor="wiz-desc">Nota (facoltativa)</label>
           <input

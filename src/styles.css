@@ -733,3 +733,14 @@ input, select, textarea, .field, .add-form input, .add-form select,
 .octo.below .octo-menu { transform-origin: top right; }
 .octo.left .octo-menu { transform-origin: bottom left; }
 .octo[style*="left"] { right: auto; } .octo[style*="top"] { bottom: auto; }
+/* passaggio Data: tutto centrato + "Non ricordo la data" */
+.date-step { align-items: center; text-align: center; }
+.date-step .chips { justify-content: center; }
+.date-step .field { width: min(260px, 100%); text-align: center; }
+.date-step .field-label { margin: 0; }
+.date-step .primary { align-self: stretch; }
+.date-step .off { opacity: .4; }
+.date-step .chip:disabled { cursor: default; }
+.date-step .field:disabled { opacity: .4; }
+.check.flag { padding: 10px 18px; border-radius: 999px; background: var(--bg); font-weight: 600; font-size: .95rem; }
+.check.flag:has(input:checked) { background: var(--tint); color: var(--accent); }
