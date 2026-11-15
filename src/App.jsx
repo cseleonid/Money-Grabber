@@ -21,6 +21,13 @@ export default function App() {
   const [payFilter, setPayFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showMonths, setShowMonths] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  useEffect(() => {
+    if (!menuOpen) return
+    const esc = (e) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', esc)
+    return () => document.removeEventListener('keydown', esc)
+  }, [menuOpen])
   const monthDdRef = useRef(null)
   useEffect(() => {
     if (!showMonths) return
@@ -85,21 +92,38 @@ export default function App() {
   return (
     <div className="app">
       <header className="top">
-        <h1>Money Grabber</h1>
-        <button
-          type="button"
-          className={`gear ${showSettings ? 'on' : ''}`}
-          onClick={() => setShowSettings((v) => !v)}
-          aria-label={showSettings ? 'Chiudi gestione categorie' : 'Gestisci categorie'}
-          aria-expanded={showSettings}
-          title={showSettings ? 'Chiudi gestione categorie' : 'Gestisci categorie'}
-        >
-          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
+        <button type="button" className="menu-btn" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" /></svg>
         </button>
       </header>
+      {menuOpen && <div className="side-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
+      <aside id="side-menu" className={`side ${menuOpen ? 'open' : ''}`} aria-label="Menu">
+        <div className="side-head">
+          <h1>Money Grabber</h1>
+          <button type="button" className="side-close" onClick={() => setMenuOpen(false)} aria-label="Chiudi menu">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <nav className="side-nav">
+          <button
+            type="button"
+            className={`side-item ${showSettings ? 'on' : ''}`}
+            aria-expanded={showSettings}
+            onClick={() => {
+              setShowSettings((v) => !v)
+              setMenuOpen(false)
+              setTimeout(() => document.querySelector('.settings')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
+            }}
+          >
+            <span className="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg></span>
+            Gestisci categorie
+          </button>
+        </nav>
+      </aside>
+      <div className="main">
 
       {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
       {state.loading && <p className="empty-msg">Caricamento delle tue spese…</p>}
@@ -298,6 +322,7 @@ export default function App() {
         )}
         <p className="hint">Spunta una spesa quando l'hai controllata (es. abbonamento disdetto o confermato).</p>
       </section>
+      </div>
     </div>
   )
 }
