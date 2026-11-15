@@ -414,3 +414,5 @@ button, input, select { font: inherit; color: inherit; }
 .wizard-top { min-height: 0; }
 .wizard-top:not(:has(.back)) { display: none; }
 .wizard-dots { margin-top: 4px; }
+/* inserimento: titoli e domanda centrati */
+.wizard h2, .wizard .wizard-q, .wizard .wizard-done { text-align: center; }
