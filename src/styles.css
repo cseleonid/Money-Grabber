@@ -466,3 +466,13 @@ button, input, select { font: inherit; color: inherit; }
 @media (max-width: 420px) { .month-prefix { font-size: 1.05rem; } }
 .month-head { gap: 2px; }
 .side { background: var(--raised); } @media (min-width: 1000px) { .side { background: var(--surface); } }
+/* riga Carta / Portafoglio: più padding */
+.pay-split {
+  margin: var(--gap-pie) auto 0; width: fit-content; max-width: 100%;
+  padding: 12px 22px; border-radius: 999px; background: var(--bg);
+  line-height: 1.5; word-spacing: 2px;
+}
+.pay-split b { margin-right: 4px; }
+.pay-split { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 10px; row-gap: 2px; }
+.ps-item { white-space: nowrap; }
+@media (max-width: 380px) { .pay-split { padding: 10px 16px; font-size: .85rem; column-gap: 8px; } }
