@@ -154,3 +154,10 @@ button, input, select { font: inherit; color: inherit; }
 .gear.on { color: var(--accent); border-color: var(--border); background: var(--bg); transform: rotate(60deg); }
 @media (prefers-reduced-motion: reduce) { .gear { transition: none; } }
 .card-head { align-items: center; }
+/* titoli più grandi */
+.card h2 { font-size: 1.35rem; line-height: 1.2; text-wrap: balance; }
+.legend-name { font-size: 1.08rem; font-weight: 600; }
+.legend-item.empty .legend-name { font-weight: 500; }
+.legend-val { font-size: 1.02rem; }
+.expense-desc { font-size: 1.05rem; font-weight: 500; }
+@media (max-width: 560px) { .card h2 { font-size: 1.2rem; } }
