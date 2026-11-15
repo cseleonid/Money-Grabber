@@ -61,3 +61,86 @@ export const formatEur = (n) => eur.format(n)
 
 export const uid = () =>
   (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()))
+
+// ---------------------------------------------------------------------------
+// Persistenza.
+// Pubblicata come Artifact su claude.ai: dati salvati nel tuo account
+// (capability `db`, area privata per utente) -> stessi dati da telefono e PC.
+// In locale (npm run dev) o se il db non è disponibile: localStorage.
+// ---------------------------------------------------------------------------
+export async function createStore(onState) {
+  let state = loadState()
+  const emit = () => onState({ ...state })
+
+  const db = window.claude?.use ? await window.claude.use('db').catch(() => null) : null
+  const user = db && window.claude?.use ? await window.claude.use('user').catch(() => null) : null
+  const uidUser = user ? await user.id().catch(() => null) : null
+
+  if (!db || !uidUser) {
+    emit()
+    const commit = (next) => { state = next; saveState(state); emit() }
+    return {
+      mode: 'local',
+      addExpense: (e) => commit({ ...state, expenses: [...state.expenses, e] }),
+      patchExpense: (id, p) => commit({ ...state, expenses: state.expenses.map((e) => (e.id === id ? { ...e, ...p } : e)) }),
+      removeExpense: (id) => commit({ ...state, expenses: state.expenses.filter((e) => e.id !== id) }),
+      setCategories: (categories) => commit({ ...state, categories }),
+    }
+  }
+
+  const base = `data/users/${uidUser}`
+  const col = db.collection(base)
+  const settingsRef = db.doc(`${base}/settings`)
+  state = { expenses: [], categories: DEFAULT_CATEGORIES, loading: true }
+  emit()
+
+  await new Promise((resolve) => {
+    const timer = setTimeout(resolve, 10000)
+    col.onSnapshot(
+      (snap) => {
+        const expenses = []
+        let categories = state.categories
+        snap.docs.forEach((d) => {
+          const data = d.data()
+          if (!data) return
+          if (d.id === 'settings') categories = data.categories ?? DEFAULT_CATEGORIES
+          else if (d.id.startsWith('exp-')) expenses.push({ ...data, id: d.id })
+        })
+        state = { expenses, categories, loading: false }
+        emit()
+        clearTimeout(timer)
+        resolve()
+      },
+      (err) => {
+        state = { ...state, loading: false, error: err?.message || 'Errore di caricamento' }
+        emit()
+        clearTimeout(timer)
+        resolve()
+      },
+    )
+  })
+
+  const fail = (err) => { state = { ...state, error: err?.message || 'Salvataggio non riuscito' }; emit() }
+  const strip = ({ id, ...rest }) => rest
+
+  return {
+    mode: 'cloud',
+    addExpense: (e) => {
+      const id = 'exp-' + e.id
+      state = { ...state, expenses: [...state.expenses, { ...e, id }] }; emit()
+      db.doc(`${base}/${id}`).set(strip(e)).catch(fail)
+    },
+    patchExpense: (id, p) => {
+      state = { ...state, expenses: state.expenses.map((e) => (e.id === id ? { ...e, ...p } : e)) }; emit()
+      db.doc(`${base}/${id}`).update(p).catch(fail)
+    },
+    removeExpense: (id) => {
+      state = { ...state, expenses: state.expenses.filter((e) => e.id !== id) }; emit()
+      db.doc(`${base}/${id}`).delete().catch(fail)
+    },
+    setCategories: (categories) => {
+      state = { ...state, categories }; emit()
+      settingsRef.set({ categories }).catch(fail)
+    },
+  }
+}

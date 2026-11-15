@@ -17,3 +17,9 @@ npm run dev
 ```
 
 Build di produzione: `npm run build` (output in `dist/`).
+
+## Versione da telefono (Artifact claude.ai)
+
+`npm run build:artifact` crea `dist-artifact/money-grabber.html`, un unico file pubblicato come Artifact privato su claude.ai.
+Lì i dati vengono salvati nel tuo account (area privata per utente), quindi sono gli stessi da telefono e da PC.
+Fuori da claude.ai (es. `npm run dev`) l'app usa il localStorage del browser.

@@ -1,19 +1,25 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
 import {
-  formatEur, loadState, monthKey, monthLabel, saveState, shiftMonth, todayISO, uid,
+  createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO, uid,
 } from './data.js'
 
 const emptyForm = () => ({ description: '', amount: '', date: todayISO(), categoryId: 'alimentari', superflua: false })
 
 export default function App() {
-  const [state, setState] = useState(loadState)
+  const [state, setState] = useState({ expenses: [], categories: DEFAULT_CATEGORIES, loading: true })
+  const store = useRef(null)
+  const [pendingDelete, setPendingDelete] = useState(null)
   const [month, setMonth] = useState(() => monthKey(todayISO()))
   const [form, setForm] = useState(emptyForm)
   const [filter, setFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
 
-  useEffect(() => saveState(state), [state])
+  useEffect(() => {
+    let alive = true
+    createStore((s) => alive && setState(s)).then((st) => { if (alive) store.current = st })
+    return () => { alive = false }
+  }, [])
 
   const { expenses, categories } = state
   const catById = useMemo(() => Object.fromEntries(categories.map((c) => [c.id, c])), [categories])
@@ -36,8 +42,6 @@ export default function App() {
   const superflueTotal = superflue.reduce((s, e) => s + e.amount, 0)
   const daControllare = superflue.filter((e) => !e.controllata)
 
-  const update = (fn) => setState((s) => ({ ...s, ...fn(s) }))
-
   const addExpense = (ev) => {
     ev.preventDefault()
     const amount = parseFloat(String(form.amount).replace(',', '.'))
@@ -51,18 +55,25 @@ export default function App() {
       superflua: form.superflua,
       controllata: false,
     }
-    update((s) => ({ expenses: [...s.expenses, expense] }))
+    if (!store.current) return
+    store.current.addExpense(expense)
     setMonth(monthKey(form.date))
     setForm((f) => ({ ...emptyForm(), date: f.date, categoryId: f.categoryId }))
   }
 
-  const patchExpense = (id, patch) =>
-    update((s) => ({ expenses: s.expenses.map((e) => (e.id === id ? { ...e, ...patch } : e)) }))
+  const patchExpense = (id, patch) => store.current?.patchExpense(id, patch)
   const removeExpense = (id) => {
-    if (confirm('Eliminare questa spesa?')) update((s) => ({ expenses: s.expenses.filter((e) => e.id !== id) }))
+    // niente confirm(): primo tocco arma, secondo tocco elimina
+    if (pendingDelete === id) {
+      store.current?.removeExpense(id)
+      setPendingDelete(null)
+    } else {
+      setPendingDelete(id)
+      setTimeout(() => setPendingDelete((p) => (p === id ? null : p)), 3000)
+    }
   }
   const patchCategory = (id, patch) =>
-    update((s) => ({ categories: s.categories.map((c) => (c.id === id ? { ...c, ...patch } : c)) }))
+    store.current?.setCategories(categories.map((c) => (c.id === id ? { ...c, ...patch } : c)))
 
   const formAuto = !!catById[form.categoryId]?.autoSuperflua
 
@@ -76,6 +87,9 @@ export default function App() {
           <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 1))} aria-label="Mese successivo">›</button>
         </div>
       </header>
+
+      {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
+      {state.loading && <p className="empty-msg">Caricamento delle tue spese…</p>}
 
       {/* 1. Grafico a torta per macro categorie */}
       <section className="card">
@@ -173,7 +187,14 @@ export default function App() {
                     >
                       {isSuperflua(e) ? '★' : '☆'}
                     </button>
-                    <button type="button" className="icon" title="Elimina" onClick={() => removeExpense(e.id)}>✕</button>
+                    <button
+                      type="button"
+                      className={`icon ${pendingDelete === e.id ? 'danger' : ''}`}
+                      title={pendingDelete === e.id ? 'Tocca di nuovo per eliminare' : 'Elimina'}
+                      onClick={() => removeExpense(e.id)}
+                    >
+                      {pendingDelete === e.id ? 'Elimina?' : '✕'}
+                    </button>
                   </div>
                 </li>
               )
