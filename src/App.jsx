@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
-import { CategoryIcon } from './icons.jsx'
+import { CategoryIcon, PaymentIcon, SectionIcon, OctoIcon } from './icons.jsx'
 import AddWizard from './AddWizard.jsx'
 import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
@@ -55,6 +55,47 @@ export default function App() {
     try { history.replaceState(null, '', id === 'personale' ? location.pathname + location.search : '#' + id) } catch { location.hash = id }
   }
   const current = SECTIONS.find((x) => x.id === section)
+
+  // pallino trascinabile: posizione ricordata su questo dispositivo
+  const [octoPos, setOctoPos] = useState(() => { try { return JSON.parse(localStorage.getItem('mg:octo')) } catch { return null } })
+  const [octoDragging, setOctoDragging] = useState(false)
+  const octoDrag = useRef(null)
+  const clampPos = (r, b) => ({
+    r: Math.min(Math.max(8, r), window.innerWidth - 68),
+    b: Math.min(Math.max(8, b), window.innerHeight - 68),
+  })
+  const octoDown = (e) => {
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    const rect = e.currentTarget.getBoundingClientRect()
+    octoDrag.current = { x0: e.clientX, y0: e.clientY, r0: window.innerWidth - rect.right, b0: window.innerHeight - rect.bottom, moved: false }
+  }
+  const octoMove = (e) => {
+    const d = octoDrag.current
+    if (!d) return
+    const dx = e.clientX - d.x0, dy = e.clientY - d.y0
+    if (!d.moved && Math.hypot(dx, dy) < 6) return
+    if (!d.moved) { d.moved = true; setOctoDragging(true); setOctoOpen(false) }
+    setOctoPos(clampPos(d.r0 - dx, d.b0 - dy))
+  }
+  const octoUp = () => {
+    const d = octoDrag.current
+    if (!d) return
+    setOctoDragging(false)
+    if (d.moved) {
+      setOctoPos((pos) => { try { localStorage.setItem('mg:octo', JSON.stringify(pos)) } catch { /* ok */ } return pos })
+      setTimeout(() => { octoDrag.current = null }, 0)
+    } else octoDrag.current = null
+  }
+  useEffect(() => {
+    const onResize = () => setOctoPos((p) => (p ? clampPos(p.r, p.b) : p))
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  // il menu si apre dal lato dove c'è spazio
+  const octoPlace = {
+    up: !octoPos || octoPos.b < window.innerHeight / 2,
+    right: !octoPos || octoPos.r < window.innerWidth / 2,
+  }
   useEffect(() => {
     if (!menuOpen) return
     const esc = (e) => { if (e.key === 'Escape') setMenuOpen(false) }
@@ -157,7 +198,7 @@ export default function App() {
       <div className="main">
         {section !== 'personale' && (
           <header className="section-head">
-            <span className="section-emoji" aria-hidden="true">{current.emoji}</span>
+            <span className="section-emoji" aria-hidden="true"><SectionIcon id={current.id} size={30} /></span>
             <div>
               <h1>{current.name}</h1>
               <p>{current.hint}</p>
@@ -246,7 +287,7 @@ export default function App() {
             portafoglio: (<>
       <section className="card wallet-card">
         <div className="card-head">
-          <h2>👛 Portafoglio · {monthLabel(month)}</h2>
+          <h2 className="with-icon"><PaymentIcon id="portafoglio" size={24} /> Portafoglio · {monthLabel(month)}</h2>
           {walletExpenses.length > 0 && (
             <button type="button" className="link" onClick={() => { setPayFilter('portafoglio'); setFilter(null) }}>
               Vedi in lista
@@ -274,7 +315,7 @@ export default function App() {
         <div className="card-head">
           <h2>
             Lista spese {filter && <small>· {catById[filter]?.name}</small>}
-            {payFilter && <small> · {PAYMENTS[payFilter].icon} {PAYMENTS[payFilter].label}</small>}
+            {payFilter && <small> · {PAYMENTS[payFilter].label}</small>}
           </h2>
           {(filter || payFilter) && (
             <button type="button" className="link" onClick={() => { setFilter(null); setPayFilter(null) }}>Mostra tutte</button>
@@ -293,7 +334,7 @@ export default function App() {
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
-                      {new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · {PAYMENTS[paymentOf(e)].icon}
+                      {new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · <PaymentIcon id={paymentOf(e)} size={14} />
                       {isSuperflua(e) && <span className="badge">superflua</span>}
                     </span>
                   </div>
@@ -344,7 +385,7 @@ export default function App() {
           </div>
         </div>
         {superflue.length === 0 ? (
-          <p className="empty-msg">Nessuna spesa superflua questo mese. 👏</p>
+          <p className="empty-msg">Nessuna spesa superflua questo mese.</p>
         ) : (
           <ul className="expense-list">
             {superflue.map((e) => (
@@ -361,7 +402,7 @@ export default function App() {
                 <div className="expense-main">
                   <span className="expense-desc">{e.description}</span>
                   <span className="expense-meta">
-                    {catById[e.categoryId]?.name} · {PAYMENTS[paymentOf(e)].icon} · {e.superflua ? 'segnata a mano' : 'auto per categoria'}
+                    {catById[e.categoryId]?.name} · <PaymentIcon id={paymentOf(e)} size={14} /> · {e.superflua ? 'segnata a mano' : 'auto per categoria'}
                   </span>
                 </div>
                 <span className="expense-amount">{formatEur(e.amount)}</span>
@@ -378,7 +419,14 @@ export default function App() {
       </div>
 
       {/* pallino 🐙 con i mini-siti */}
-      <div className={`octo ${octoOpen ? 'open' : ''}`} ref={octoRef}>
+      <div
+        className={`octo ${octoOpen ? 'open' : ''} ${octoPlace.up ? '' : 'below'} ${octoPlace.right ? '' : 'left'} ${octoDragging ? 'dragging' : ''}`}
+        ref={octoRef}
+        style={octoPos ? {
+          ...(octoPlace.right ? { right: octoPos.r } : { left: window.innerWidth - octoPos.r - 60 }),
+          ...(octoPlace.up ? { bottom: octoPos.b } : { top: window.innerHeight - octoPos.b - 60 }),
+        } : undefined}
+      >
         {octoOpen && (
           <nav className="octo-menu" aria-label="Sezioni">
             {SECTIONS.map((x) => (
@@ -389,14 +437,24 @@ export default function App() {
                 aria-current={x.id === section ? 'page' : undefined}
                 onClick={() => openSection(x.id)}
               >
-                <span className="octo-emoji" aria-hidden="true">{x.emoji}</span>
+                <span className="octo-emoji" aria-hidden="true"><SectionIcon id={x.id} size={24} /></span>
                 <span className="octo-name">{x.name}</span>
               </button>
             ))}
           </nav>
         )}
-        <button type="button" className="octo-btn" onClick={() => setOctoOpen((v) => !v)} aria-label="Apri le sezioni" aria-expanded={octoOpen}>
-          <span aria-hidden="true">🐙</span>
+        <button
+          type="button"
+          className="octo-btn"
+          onClick={() => { if (octoDrag.current?.moved) return; setOctoOpen((v) => !v) }}
+          onPointerDown={octoDown}
+          onPointerMove={octoMove}
+          onPointerUp={octoUp}
+          onPointerCancel={octoUp}
+          aria-label="Apri le sezioni (trascina per spostare)"
+          aria-expanded={octoOpen}
+        >
+          <OctoIcon size={30} />
         </button>
       </div>
     </div>

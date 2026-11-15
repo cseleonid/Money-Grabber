@@ -43,3 +43,38 @@ export function PaymentIcon({ id, size = 20 }) {
     </svg>
   )
 }
+
+// Icone monocolore delle sezioni (stesso tratto sottile delle categorie)
+const SECTION_PATHS = {
+  personale: <><circle cx="12" cy="12" r="8.5" /><path d="M15 9.2a3.6 3.6 0 1 0 0 5.6" /><path d="M7.8 11h5.4M7.8 13.2h5.4" /></>,
+  calendario: <><rect x="3.5" y="5" width="17" height="15.5" rx="3" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>,
+  spesa: <><path d="M3 4.5h2.2l2.2 10.2h10.4l1.9-7.4H6.3" /><circle cx="9" cy="19" r="1.3" /><circle cx="16.5" cy="19" r="1.3" /></>,
+  todo: <><rect x="4" y="4" width="16" height="16" rx="4.5" /><path d="m8.5 12.2 2.4 2.4 4.6-5" /></>,
+  condivise: <><circle cx="9" cy="8.5" r="3" /><path d="M3.5 19a5.5 5.5 0 0 1 11 0" /><circle cx="16.5" cy="9.5" r="2.4" /><path d="M15.6 13.9A4.5 4.5 0 0 1 20.5 19" /></>,
+}
+
+export function SectionIcon({ id, size = 22 }) {
+  return (
+    <svg className="sec-icon" viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor"
+      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {SECTION_PATHS[id] ?? SECTION_PATHS.personale}
+    </svg>
+  )
+}
+
+// Polipo minimal: testa a cupola, due occhi e cinque tentacoli
+export function OctoIcon({ size = 30 }) {
+  return (
+    <svg className="octo-icon" viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor"
+      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6.5 12.5V10a5.5 5.5 0 0 1 11 0v2.5" />
+      <path d="M6.5 12.5c0 3-2.6 3.4-3.3 5.6" />
+      <path d="M9.4 13c.1 3.3-1 5-2.2 6.8" />
+      <path d="M12 13.2c.4 2.4 1 4.2-.4 6.6" />
+      <path d="M14.6 13c-.1 3.3 1 5 2.2 6.8" />
+      <path d="M17.5 12.5c0 3 2.6 3.4 3.3 5.6" />
+      <circle cx="10" cy="9.6" r=".75" fill="currentColor" stroke="none" />
+      <circle cx="14" cy="9.6" r=".75" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}

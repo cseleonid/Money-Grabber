@@ -691,3 +691,45 @@ body { transition: background-color .25s; }
 .add-box-list button { border: none; border-radius: 999px; padding: 10px 16px; background: var(--tint); color: var(--text); font-weight: 600; cursor: pointer; }
 .add-box-list button.cancel { background: none; color: var(--text-2); }
 @media (max-width: 380px) { .move-bar button { padding: 7px 9px; font-size: .8rem; } }
+
+/* ===== regola generale: nessun contorno su box, icone e controlli =====
+   (separazione con riempimenti di colore; il contorno resta solo per il focus da tastiera) */
+input, select, textarea, .field, .add-form input, .add-form select,
+.settings-row input:not([type]), .amount-field, .month-nav input, .month-nav button { border: none !important; }
+.field, .settings-row input:not([type]), .add-form input:not([type="checkbox"]), .add-form select { background: var(--bg); }
+.amount-field:focus-within { background: var(--tint); }
+.field:focus, .settings-row input:focus { background: var(--tint); outline: none; }
+.choice.on, .chip.on { box-shadow: none !important; }
+.choice.on { background: var(--tint); color: var(--accent); }
+.chip.on { background: var(--accent); color: #fff; }
+.badge { border: none; background: var(--tint); color: var(--accent); font-weight: 700; padding: 1px 8px; }
+.error-msg { border: none; background: var(--tint); }
+.add-box-btn { border: none; background: var(--surface); }
+.add-box-btn:hover { background: var(--tint); }
+.movable.selected > .card, .movable.selected > section { box-shadow: 0 14px 40px rgba(0,0,0,.25); transform: scale(1.01); }
+.movable > section { transition: transform .15s, box-shadow .15s; }
+
+/* caselle tonde: riempimento invece del bordo */
+.check input[type="checkbox"] { border: none !important; background: var(--border); }
+.check input[type="checkbox"]:checked { background: var(--accent); }
+.check input[type="checkbox"]::after { background: #fff; width: 9px; height: 9px; }
+
+/* icone sezioni monocolore, senza anelli */
+.section-emoji { box-shadow: none !important; background: var(--tint); color: var(--accent); }
+.octo-emoji { box-shadow: none !important; background: var(--ct); color: var(--c); }
+.octo-item.on { box-shadow: none !important; background: var(--ct); }
+.octo-name { color: var(--c); font-weight: 800; font-size: 1rem; }
+.with-icon { display: flex; align-items: center; gap: 10px; }
+.with-icon svg { color: var(--accent); flex-shrink: 0; }
+.expense-meta svg { display: inline-block; vertical-align: -2px; color: var(--text-2); }
+
+/* polipo minimal e trascinabile */
+.octo-btn { box-shadow: 0 8px 24px rgba(0,0,0,.22) !important; color: var(--accent); background: var(--raised); touch-action: none; font-size: 0; }
+.octo-btn:hover { transform: scale(1.05); }
+.octo.open .octo-btn { transform: rotate(-10deg) scale(1.05); }
+.octo.dragging .octo-btn { transform: scale(1.12); cursor: grabbing; box-shadow: 0 16px 40px rgba(0,0,0,.3) !important; }
+.octo.below { flex-direction: column-reverse; }
+.octo.left { align-items: flex-start; }
+.octo.below .octo-menu { transform-origin: top right; }
+.octo.left .octo-menu { transform-origin: bottom left; }
+.octo[style*="left"] { right: auto; } .octo[style*="top"] { bottom: auto; }
