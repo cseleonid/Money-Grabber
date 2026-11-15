@@ -72,8 +72,8 @@ button, input, select { font: inherit; color: inherit; }
 .empty-msg { color: var(--text-2); margin: 4px 0; }
 
 /* grafico */
-.pie-wrap { display: grid; grid-template-columns: 220px 1fr; gap: 20px; align-items: center; }
-.pie-svg { width: 100%; max-width: 220px; display: block; margin: 0 auto; }
+.pie-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: center; }
+.pie-svg { width: 100%; max-width: 300px; display: block; margin: 0 auto; }
 .pie-slice { cursor: pointer; transition: opacity .15s; }
 .pie-center-main { font-size: 18px; font-weight: 600; fill: var(--text); }
 .pie-center-sub { font-size: 12px; fill: var(--text-2); }
