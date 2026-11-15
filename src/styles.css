@@ -231,3 +231,20 @@ button, input, select { font: inherit; color: inherit; }
 .settings { border: none; background: var(--bg); }
 .choice, .amount-field, .chip { border-color: transparent; }
 .choice:hover { border-color: transparent; background: var(--border); }
+/* mese e anno grandi, frecce proporzionate */
+.month-head .month-nav { gap: 14px; }
+.month-picker { position: relative; display: inline-flex; align-items: center; cursor: pointer; border-radius: 10px; padding: 4px 8px; }
+.month-picker:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+.month-label { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.month-picker input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; padding: 0; }
+.month-nav button { width: 44px; height: 44px; font-size: 2.2rem; line-height: 1; font-weight: 300; display: grid; place-items: center; padding: 0 0 4px; border-radius: 12px; }
+@media (max-width: 420px) { .month-label { font-size: 1.35rem; } .month-head .month-nav { gap: 8px; } .month-nav button { width: 38px; height: 38px; font-size: 1.9rem; } }
+.month-head .month-nav { min-width: 0; }
+@media (max-width: 420px) {
+  .month-head { grid-template-columns: 30px minmax(0, 1fr) 34px; }
+  .month-head .month-nav { gap: 4px; }
+  .month-label { font-size: 1.3rem; }
+  .month-picker { padding: 4px 4px; }
+  .month-nav button { width: 36px; height: 40px; font-size: 1.9rem; }
+  .gear { width: 34px; height: 34px; }
+}

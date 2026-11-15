@@ -85,7 +85,16 @@ export default function App() {
           <span aria-hidden="true" />
           <div className="month-nav">
             <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -1))} aria-label="Mese precedente">‹</button>
-            <input type="month" value={month} onChange={(e) => e.target.value && setMonth(e.target.value)} aria-label="Mese" />
+            <label className="month-picker">
+              <span className="month-label">{monthLabel(month)}</span>
+              <input
+                type="month"
+                value={month}
+                onChange={(e) => e.target.value && setMonth(e.target.value)}
+                onClick={(e) => { try { e.currentTarget.showPicker?.() } catch { /* non supportato */ } }}
+                aria-label="Scegli il mese"
+              />
+            </label>
             <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 1))} aria-label="Mese successivo">›</button>
           </div>
           <button
