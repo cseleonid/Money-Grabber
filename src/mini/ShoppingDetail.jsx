@@ -1,24 +1,25 @@
 import { useState } from 'react'
 import { uid } from '../data.js'
-import { ProductIcon } from './productIcons.jsx'
+import { ProductIcon, groupFor, groupRank } from './productIcons.jsx'
+import { SORTS } from './ShoppingSettings.jsx'
+import { getPrefs } from '../prefs.js'
 
 // Schermata di una lista: prodotti come riquadri con icona; tocco = comprato.
 // I comprati finiscono in "Utilizzato per ultimo": un tocco li rimette in lista.
 const DAY = 24 * 60 * 60 * 1000
-const SORTS = [
-  { id: 'recent', label: 'Ordine di inserimento' },
-  { id: 'az', label: 'Alfabetico A–Z' },
-]
 
 const split = (name) => {
   const [first, ...rest] = name.trim().split(/\s+/)
   return [first, rest.join(' ')]
 }
 
-export default function ShoppingDetail({ list, items: all, store, onBack, avatars }) {
+export default function ShoppingDetail({ list, items: all, store, onBack, avatars, onSettings }) {
   const items = all.filter((i) => (i.listId || 'default') === list.id)
   const [text, setText] = useState('')
-  const [sort, setSort] = useState('recent')
+  const [localSort, setLocalSort] = useState('recent')
+  const sort = list.virtual ? localSort : (list.sort || 'recent')
+  const setSort = (id) => (list.virtual ? setLocalSort(id) : store?.patchItem('shl', list.id, { sort: id }))
+  const { view, group } = getPrefs()
   const [sortOpen, setSortOpen] = useState(false)
   const [menu, setMenu] = useState(false)
   const [recentOpen, setRecentOpen] = useState(true)
@@ -26,8 +27,9 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
   const [name, setName] = useState(list.name)
   const [confirmDel, setConfirmDel] = useState(false)
 
-  const sorter = sort === 'az'
-    ? (a, b) => a.name.localeCompare(b.name, 'it')
+  const byName = (a, b) => a.name.localeCompare(b.name, 'it')
+  const sorter = sort === 'az' ? byName
+    : sort === 'reparto' ? (a, b) => groupRank(a.name) - groupRank(b.name) || byName(a, b)
     : (a, b) => (a.created || 0) - (b.created || 0)
   const todo = items.filter((i) => !i.done).sort(sorter)
   const recent = items.filter((i) => i.done).sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0))
@@ -65,6 +67,36 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
     )
   }
 
+  const Row = ({ i }) => {
+    const [title, sub] = split(i.name)
+    const isNew = now - (i.created || 0) < DAY
+    return (
+      <button type="button" className="prod-row" onClick={() => store?.patchItem('shop', i.id, { done: true, doneAt: Date.now() })} aria-label={`Comprato: ${i.name}`}>
+        <ProductIcon name={i.name} size={34} />
+        <span className="prod-row-txt"><b>{title}</b>{(sub || i.qty) && <small>{[sub, i.qty].filter(Boolean).join(' · ')}</small>}</span>
+        {isNew && <span className="prod-new static">NEW</span>}
+      </button>
+    )
+  }
+  const Block = ({ list: l }) => (view === 'lista'
+    ? <div className="prod-rows">{l.map((i) => <Row key={i.id} i={i} />)}</div>
+    : <div className="prod-grid">{l.map((i) => <Tile key={i.id} i={i} />)}</div>)
+  const Products = ({ items: l }) => {
+    if (!group) return <Block list={l} />
+    const groups = []
+    l.slice().sort((a, b) => groupRank(a.name) - groupRank(b.name)).forEach((i) => {
+      const g = groupFor(i.name)
+      const last = groups[groups.length - 1]
+      if (last && last.name === g) last.items.push(i); else groups.push({ name: g, items: [i] })
+    })
+    return groups.map((g) => (
+      <section key={g.name} className="prod-group">
+        <h3>{g.name}</h3>
+        <Block list={g.items.slice().sort(sorter)} />
+      </section>
+    ))
+  }
+
   return (
     <div className="shop-detail">
       <div className="shop-bar">
@@ -78,6 +110,7 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
             </button>
             {menu && (
               <div className="pop-menu" role="menu">
+                <button type="button" role="menuitem" onClick={() => { setMenu(false); onSettings?.() }}>Impostazioni lista</button>
                 <button type="button" role="menuitem" onClick={() => { setRenaming(true); setMenu(false) }}>Rinomina lista</button>
                 <button type="button" role="menuitem" className="danger" onClick={() => {
                   if (!confirmDel) { setConfirmDel(true); return }
@@ -133,7 +166,7 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
       {todo.length === 0 ? (
         <p className="shop-empty">Niente da comprare. Aggiungi un prodotto qui sopra.</p>
       ) : (
-        <div className="prod-grid">{todo.map((i) => <Tile key={i.id} i={i} />)}</div>
+        <Products items={todo} />
       )}
 
       {recent.length > 0 && (

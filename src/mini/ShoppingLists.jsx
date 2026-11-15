@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { uid } from '../data.js'
 import ShoppingDetail from './ShoppingDetail.jsx'
+import ShoppingSettings from './ShoppingSettings.jsx'
 
 // 🛒 "Le mie liste": ogni lista della spesa è una scheda colorata con titolo,
 // numero di articoli da comprare, persone della lista e freccia per aprirla.
@@ -28,6 +29,7 @@ const avColor = (n) => AV_COLORS[[...n].reduce((h, c) => h + c.charCodeAt(0), 0)
 
 export default function ShoppingLists({ lists, items, store }) {
   const [openId, setOpenId] = useState(null)
+  const [settings, setSettings] = useState(null) // null | 'menu' | { list: id }
   const [editing, setEditing] = useState(false)
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState('')
@@ -66,6 +68,24 @@ export default function ShoppingLists({ lists, items, store }) {
   }
 
   const open = all.find((l) => l.id === openId)
+  const decoFor = (l) => {
+    const set = DECO_SETS[(LIST_COLORS.indexOf(l?.color) + 5) % DECO_SETS.length] || DECO_SETS[0]
+    return <><Deco name={set[0]} className="d1" /><Deco name={set[1]} className="d2" /><Deco name={set[2]} className="d3" /></>
+  }
+  if (settings) {
+    const l = settings.list ? lists.find((x) => x.id === settings.list) : null
+    return (
+      <ShoppingSettings
+        start={settings}
+        lists={lists}
+        items={items}
+        store={store}
+        deco={decoFor(l)}
+        onClose={() => setSettings(null)}
+        onDeleted={() => { setSettings(null); setOpenId(null) }}
+      />
+    )
+  }
   if (open) {
     const members = open.members || []
     return (
@@ -75,6 +95,7 @@ export default function ShoppingLists({ lists, items, store }) {
         items={items}
         store={store}
         onBack={() => setOpenId(null)}
+        onSettings={open.virtual ? undefined : () => setSettings({ list: open.id })}
         avatars={members.length > 0 && (
           <div className="shop-avatars">
             {members.slice(0, 3).map((m, i) => <span key={i} className="avatar sm" style={{ background: avColor(m) }} title={m}>{initials(m)}</span>)}
@@ -89,6 +110,9 @@ export default function ShoppingLists({ lists, items, store }) {
     <>
       <div className="lists-top">
         <h1>Le mie liste</h1>
+        <button type="button" className="round-btn lists-gear" onClick={() => setSettings('menu')} aria-label="Impostazioni">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" /></svg>
+        </button>
         <button type="button" className="lists-edit" onClick={() => { setEditing((v) => !v); setConfirmDel(null) }}>
           {editing ? 'FATTO' : 'MODIFICA'}
         </button>

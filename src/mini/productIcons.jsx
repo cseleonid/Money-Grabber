@@ -55,3 +55,17 @@ export function ProductIcon({ name, size = 64 }) {
     </svg>
   )
 }
+
+// Reparti per "Raggruppa gli articoli" e per l'ordine "Per reparto"
+export const GROUPS = [
+  ['frutta', 'Frutta'], ['banana', 'Frutta'], ['verdura', 'Verdura'],
+  ['pane', 'Pane e forno'], ['latte', 'Latte e latticini'], ['formaggio', 'Formaggi'], ['uova', 'Uova'],
+  ['carne', 'Carne e salumi'], ['pesce', 'Pesce'], ['pasta', 'Pasta, riso e farine'],
+  ['salsa', 'Salse e condimenti'], ['biscotti', 'Dolci e snack'], ['caffe', 'Colazione'],
+  ['bottiglia', 'Bevande'], ['vino', 'Vino e birra'],
+  ['detersivo', 'Casa e igiene'], ['carta', 'Carta e pulizia'], ['animali', 'Animali'], ['sacchetto', 'Altro'],
+]
+const GROUP_OF = Object.fromEntries(GROUPS)
+const GROUP_ORDER = [...new Set(GROUPS.map(([, g]) => g))]
+export const groupFor = (name) => GROUP_OF[iconFor(name)] || 'Altro'
+export const groupRank = (name) => GROUP_ORDER.indexOf(groupFor(name))

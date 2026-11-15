@@ -4,6 +4,7 @@ import { CategoryIcon, PaymentIcon, SectionIcon, OctoIcon } from './icons.jsx'
 import AddWizard from './AddWizard.jsx'
 import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
+import { applyTheme, getPrefs } from './prefs.js'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
@@ -33,6 +34,7 @@ export default function App() {
   // sezione corrente (mini-sito) dal pallino 🐙, sincronizzata con #hash
   const [section, setSection] = useState(sectionFromHash)
   const [octoOpen, setOctoOpen] = useState(false)
+  useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
     const onHash = () => setSection(sectionFromHash())
