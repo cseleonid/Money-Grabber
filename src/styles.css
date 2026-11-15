@@ -482,3 +482,6 @@ button, input, select { font: inherit; color: inherit; }
 .wallet-card .pie-wrap { row-gap: max(0px, calc(20px - 13px - 12px)); }
 .wallet-card .card-head + .pie-wrap { margin-top: 6px; }
 .wallet-card .legend { margin-top: -4px; }
+/* titolo dell'inserimento grande come "Novembre 2026" */
+.wizard h2#wizard-title { font-size: 2rem; font-weight: 800; line-height: 1.15; letter-spacing: normal; }
+@media (max-width: 420px) { .wizard h2#wizard-title { font-size: 1.6rem; } }
