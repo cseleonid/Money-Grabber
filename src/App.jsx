@@ -195,7 +195,7 @@ export default function App() {
       </section>
 
       {/* 1b. Grafico dedicato al portafoglio */}
-      <section className="card">
+      <section className="card wallet-card">
         <div className="card-head">
           <h2>👛 Portafoglio · {monthLabel(month)}</h2>
           {walletExpenses.length > 0 && (
