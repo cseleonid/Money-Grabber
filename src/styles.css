@@ -283,3 +283,7 @@ button, input, select { font: inherit; color: inherit; }
 .amount-field, .summary, .field { border-radius: 16px; }
 .primary { border-radius: 14px; }
 @media (max-width: 420px) { .choice { min-height: 64px; font-size: .72rem; } }
+/* icone più grandi, etichette più piccole */
+.choice { font-size: .7rem; font-weight: 500; color: var(--text-2); }
+.choice.big { font-size: .85rem; font-weight: 600; color: var(--text); }
+@media (max-width: 420px) { .choice { font-size: .66rem; min-height: 70px; } }
