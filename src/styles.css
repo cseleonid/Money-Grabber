@@ -532,3 +532,4 @@ button, .choice, .legend-item { -webkit-tap-highlight-color: transparent; }
 .side-tab:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 .app { padding-top: max(16px, env(safe-area-inset-top, 0px)); }
 @media (min-width: 1000px) { .side-tab { display: none; } }
+.pay-split { background: none; }
