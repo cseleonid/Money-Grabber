@@ -33,6 +33,26 @@ export default function AddWizard({ categories, payments, onAdd }) {
   const amountOk = amount > 0
   const auto = !!cat?.autoSuperflua
 
+  // passaggio massimo raggiungibile: avanti solo se i passaggi precedenti sono completi
+  const ready = [true, !!d.payment, !!d.categoryId, amountOk, !!d.date]
+  const maxStep = (() => { let m = 1; while (m < TOTAL && ready[m]) m++; return m })()
+  const goTo = (n) => { if (n >= 1 && n <= maxStep) setStep(n) }
+
+  // swipe orizzontale: destra → indietro, sinistra → avanti (se consentito)
+  const touch = useRef(null)
+  const onTouchStart = (e) => { const t = e.touches[0]; touch.current = { x: t.clientX, y: t.clientY } }
+  const onTouchEnd = (e) => {
+    if (!touch.current) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - touch.current.x, dy = t.clientY - touch.current.y
+    touch.current = null
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return
+    if (dx < 0) tryNext(); else goTo(step - 1)
+  }
+  const [nudge, setNudge] = useState(false)
+  useEffect(() => { if (!nudge) return; const t = setTimeout(() => setNudge(false), 400); return () => clearTimeout(t) }, [nudge])
+  const tryNext = () => { if (step + 1 <= maxStep) setStep(step + 1); else setNudge(true) }
+
   const choose = (patch, next) => {
     setD((x) => ({ ...x, ...patch }))
     setStep(next)
@@ -57,18 +77,24 @@ export default function AddWizard({ categories, payments, onAdd }) {
   }
 
   return (
-    <section className="card wizard" aria-labelledby="wizard-title">
-      <div className="wizard-top">
-        {step > 1 ? (
-          <button type="button" className="link back" onClick={() => setStep(step - 1)}>‹ Indietro</button>
-        ) : <span />}
-        <span className="wizard-step">Passaggio {step} di {TOTAL}</span>
-        <span aria-hidden="true" />
-      </div>
-      <div className="wizard-dots" aria-hidden="true">
-        {STEPS.map((_, i) => (
-          <span key={i} className={i + 1 === step ? 'cur' : i + 1 < step ? 'past' : ''} />
-        ))}
+    <section className={`card wizard ${nudge ? 'nudge' : ''}`} aria-labelledby="wizard-title" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <span className="wizard-step" aria-live="polite">Passaggio {step} di {TOTAL}</span>
+      <div className="wizard-dots" role="tablist" aria-label="Passaggi">
+        {STEPS.map((label, i) => {
+          const n = i + 1
+          return (
+            <button
+              key={n}
+              type="button"
+              role="tab"
+              aria-selected={n === step}
+              aria-label={`Passaggio ${n}: ${label}`}
+              disabled={n > maxStep}
+              className={n === step ? 'cur' : n < step ? 'past' : ''}
+              onClick={() => goTo(n)}
+            />
+          )
+        })}
       </div>
       <h2 id="wizard-title">{step === 1 ? 'Aggiungi spesa' : STEPS[step - 1]}</h2>
 
@@ -83,7 +109,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
           <p className="hint wizard-q">{STEPS[0]}</p>
           <div className="choice-grid two">
             {Object.entries(payments).map(([k, p]) => (
-              <button key={k} type="button" className="choice big" onClick={() => { setDone(null); choose({ payment: k }, 2) }}>
+              <button key={k} type="button" className={`choice big ${d.payment === k ? 'on' : ''}`} onClick={() => { setDone(null); choose({ payment: k }, 2) }}>
                 <PaymentIcon id={k} size={34} />
                 <span>{p.label}</span>
               </button>
