@@ -143,7 +143,7 @@ export default function App() {
 
         <PieChart data={byCategory} total={total} selected={filter} onSelect={(id) => { setFilter(id); setPayFilter(null) }} />
         <p className="pay-split">
-          💳 Carta {formatEur(total - walletTotal)} · 👛 Portafoglio {formatEur(walletTotal)}
+          <b>Carta</b> {formatEur(total - walletTotal)} · <b>Portafoglio</b> {formatEur(walletTotal)}
         </p>
       </section>
 

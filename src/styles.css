@@ -168,3 +168,4 @@ button, input, select { font: inherit; color: inherit; }
 .pie-center-pct { font-size: 30px; font-weight: 700; fill: var(--text); font-variant-numeric: tabular-nums; }
 .icon-chip { width: 44px; height: 44px; border-radius: 12px; }
 .legend-item { padding: 7px 8px; gap: 12px; }
+.pay-split b { color: var(--text); font-weight: 700; }
