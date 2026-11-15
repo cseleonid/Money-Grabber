@@ -148,3 +148,9 @@ button, input, select { font: inherit; color: inherit; }
 .pay-toggle button { padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; }
 .pay-toggle button.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 600; }
 .pay-split { margin: 12px 0 0; color: var(--text-2); font-size: .9rem; text-align: center; font-variant-numeric: tabular-nums; }
+.gear { flex-shrink: 0; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; border: 1px solid transparent; background: none; color: var(--text-2); cursor: pointer; transition: transform .25s, color .15s; }
+.gear:hover { color: var(--text); background: var(--bg); }
+.gear:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.gear.on { color: var(--accent); border-color: var(--border); background: var(--bg); transform: rotate(60deg); }
+@media (prefers-reduced-motion: reduce) { .gear { transition: none; } }
+.card-head { align-items: center; }
