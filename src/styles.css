@@ -276,3 +276,10 @@ button, input, select { font: inherit; color: inherit; }
 /* voci della legenda: angoli più arrotondati, senza contorno */
 .legend-item { border: none !important; border-radius: 14px; }
 .legend-item.active { background: var(--bg); }
+/* pulsanti di scelta: più piccoli e più arrotondati */
+.choice { border-radius: 18px; min-height: 68px; padding: 8px 4px; gap: 4px; font-size: .8rem; }
+.choice.big { min-height: 80px; font-size: .95rem; border-radius: 20px; flex-direction: row; gap: 10px; }
+.chip { border-radius: 999px; padding: 8px 14px; font-size: .9rem; }
+.amount-field, .summary, .field { border-radius: 16px; }
+.primary { border-radius: 14px; }
+@media (max-width: 420px) { .choice { min-height: 64px; font-size: .72rem; } }

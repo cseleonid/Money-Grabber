@@ -81,7 +81,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
           <div className="choice-grid two">
             {Object.entries(payments).map(([k, p]) => (
               <button key={k} type="button" className="choice big" onClick={() => { setDone(null); choose({ payment: k }, 2) }}>
-                <PaymentIcon id={k} size={36} />
+                <PaymentIcon id={k} size={26} />
                 <span>{p.label}</span>
               </button>
             ))}
@@ -98,7 +98,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
               className={`choice ${d.categoryId === c.id ? 'on' : ''}`}
               onClick={() => choose({ categoryId: c.id, superflua: false }, 3)}
             >
-              <CategoryIcon id={c.id} slot={c.slot} size={30} />
+              <CategoryIcon id={c.id} slot={c.slot} size={24} />
               <span>{c.name}</span>
             </button>
           ))}
