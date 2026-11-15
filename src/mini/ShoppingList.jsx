@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { uid } from '../data.js'
 
 // 🛒 Lista della spesa: aggiungi, spunta quando è nel carrello, svuota i presi.
-export default function ShoppingList({ items, store }) {
+export default function ShoppingList({ items: all, listId, store }) {
+  const items = all.filter((i) => (i.listId || 'default') === listId)
   const [text, setText] = useState('')
   const [qty, setQty] = useState('')
   const todo = items.filter((i) => !i.done).sort((a, b) => (a.created || 0) - (b.created || 0))
@@ -12,7 +13,7 @@ export default function ShoppingList({ items, store }) {
     e.preventDefault()
     const name = text.trim()
     if (!name) return
-    store?.addItem('shop', { id: uid(), name, qty: qty.trim(), done: false, created: Date.now() })
+    store?.addItem('shop', { id: uid(), listId, name, qty: qty.trim(), done: false, created: Date.now() })
     setText(''); setQty('')
   }
 

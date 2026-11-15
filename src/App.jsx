@@ -5,7 +5,7 @@ import AddWizard from './AddWizard.jsx'
 import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
 import CalendarView from './mini/CalendarView.jsx'
-import ShoppingList from './mini/ShoppingList.jsx'
+import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
 import SharedExpenses from './mini/SharedExpenses.jsx'
 import {
@@ -196,7 +196,7 @@ export default function App() {
         </nav>
       </aside>
       <div className="main">
-        {section !== 'personale' && (
+        {section !== 'personale' && section !== 'spesa' && (
           <header className="section-head">
             <span className="section-emoji" aria-hidden="true"><SectionIcon id={current.id} size={30} /></span>
             <div>
@@ -206,7 +206,7 @@ export default function App() {
           </header>
         )}
         {section === 'calendario' && <CalendarView items={state.lists?.cal || []} store={store.current} />}
-        {section === 'spesa' && <ShoppingList items={state.lists?.shop || []} store={store.current} />}
+        {section === 'spesa' && <ShoppingLists lists={state.lists?.shl || []} items={state.lists?.shop || []} store={store.current} />}
         {section === 'todo' && <TodoList items={state.lists?.todo || []} store={store.current} />}
         {section === 'condivise' && <SharedExpenses people={state.lists?.ppl || []} expenses={state.lists?.shx || []} store={store.current} />}
         {section === 'personale' && (<>

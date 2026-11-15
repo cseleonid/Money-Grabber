@@ -72,10 +72,10 @@ export const uid = () =>
 //
 // Oltre alle spese ("exp-"), ogni mini-sito ha la sua lista di documenti,
 // identificata da un prefisso nell'id del documento:
-//   cal-  eventi del calendario      shop- lista della spesa
+//   cal-  eventi del calendario      shop- prodotti   shl- liste della spesa
 //   todo- attività                   shx-  spese condivise    ppl- persone
 // ---------------------------------------------------------------------------
-export const LIST_KINDS = ['cal', 'shop', 'todo', 'shx', 'ppl']
+export const LIST_KINDS = ['cal', 'shop', 'shl', 'todo', 'shx', 'ppl']
 const emptyLists = () => Object.fromEntries(LIST_KINDS.map((k) => [k, []]))
 
 export async function createStore(onState) {
