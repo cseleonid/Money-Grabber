@@ -79,7 +79,7 @@ button, input, select { font: inherit; color: inherit; }
 .pie-center-sub { font-size: 12px; fill: var(--text-2); }
 .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .legend-item {
-  width: 100%; display: grid; grid-template-columns: 22px 1fr auto 40px; gap: 10px; align-items: center;
+  width: 100%; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center;
   padding: 6px 8px; border-radius: 8px; border: 1px solid transparent; background: none; cursor: pointer; text-align: left;
 }
 .legend-item:hover { background: var(--bg); }
@@ -165,3 +165,6 @@ button, input, select { font: inherit; color: inherit; }
 .cat-icon { display: block; flex-shrink: 0; }
 .legend-item.empty .cat-icon { opacity: .45; }
 .icon-chip { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); }
+.pie-center-pct { font-size: 30px; font-weight: 700; fill: var(--text); font-variant-numeric: tabular-nums; }
+.icon-chip { width: 44px; height: 44px; border-radius: 12px; }
+.legend-item { padding: 7px 8px; gap: 12px; }

@@ -130,7 +130,7 @@ export default function App() {
             <p className="hint">Rinomina le categorie e scegli quali sono <b>superflue in automatico</b>.</p>
             {categories.map((c) => (
               <div className="settings-row" key={c.id}>
-                <CategoryIcon id={c.id} slot={c.slot} />
+                <CategoryIcon id={c.id} slot={c.slot} size={26} />
                 <input value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label="Nome categoria" />
                 <label className="check">
                   <input type="checkbox" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} />
@@ -234,7 +234,7 @@ export default function App() {
               const auto = !!c?.autoSuperflua
               return (
                 <li key={e.id} className="expense">
-                  <span className="icon-chip"><CategoryIcon id={c?.id} slot={c?.slot} size={20} /></span>
+                  <span className="icon-chip"><CategoryIcon id={c?.id} slot={c?.slot} size={26} /></span>
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
@@ -302,7 +302,7 @@ export default function App() {
                     aria-label="Controllata"
                   />
                 </label>
-                <span className="icon-chip"><CategoryIcon id={e.categoryId} slot={catById[e.categoryId]?.slot} size={20} /></span>
+                <span className="icon-chip"><CategoryIcon id={e.categoryId} slot={catById[e.categoryId]?.slot} size={26} /></span>
                 <div className="expense-main">
                   <span className="expense-desc">{e.description}</span>
                   <span className="expense-meta">

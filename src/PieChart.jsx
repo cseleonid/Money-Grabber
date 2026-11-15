@@ -67,11 +67,11 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
             ))}
             {focus ? (
               <>
-                <text x={C} y={C - 8} textAnchor="middle" className="pie-center-sub">{focus.name}</text>
-                <text x={C} y={C + 14} textAnchor="middle" className="pie-center-main">{formatEur(focus.value)}</text>
-                <text x={C} y={C + 32} textAnchor="middle" className="pie-center-sub">
-                  {((focus.value / total) * 100).toFixed(1)}%
+                <text x={C} y={C - 20} textAnchor="middle" className="pie-center-sub">{focus.name}</text>
+                <text x={C} y={C + 10} textAnchor="middle" className="pie-center-pct">
+                  {((focus.value / total) * 100).toLocaleString('it-IT', { maximumFractionDigits: 1 })}%
                 </text>
+                <text x={C} y={C + 30} textAnchor="middle" className="pie-center-sub">{formatEur(focus.value)}</text>
               </>
             ) : (
               <>
@@ -85,7 +85,6 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
 
       <ul className="legend">
         {(hideEmpty ? data.filter((d) => d.value > 0) : data).map((d) => {
-          const pct = total ? (d.value / total) * 100 : 0
           return (
             <li key={d.id}>
               <button
@@ -95,10 +94,9 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
                 onMouseEnter={() => d.value > 0 && setHover(arcs.find((a) => a.id === d.id))}
                 onMouseLeave={() => setHover(null)}
               >
-                <CategoryIcon id={d.id} slot={d.slot} />
+                <CategoryIcon id={d.id} slot={d.slot} size={28} />
                 <span className="legend-name">{d.name}</span>
                 <span className="legend-val">{formatEur(d.value)}</span>
-                <span className="legend-pct">{pct.toFixed(0)}%</span>
               </button>
             </li>
           )
