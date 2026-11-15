@@ -296,3 +296,16 @@ button, input, select { font: inherit; color: inherit; }
 .wizard-dots span.past { background: var(--accent); opacity: .45; }
 .wizard-dots span.cur { width: 22px; background: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .wizard-dots span { transition: none; } }
+
+/* angoli molto arrotondati in tutto il sito */
+.card { border-radius: 30px; padding: 20px; }
+.month-panel, .settings, .summary, .super-stats > div, .wizard-done, .error-msg { border-radius: 22px; }
+.amount-field, .field, .settings-row input:not([type]) { border-radius: 20px; }
+.choice { border-radius: 24px; }
+.choice.big { border-radius: 26px; }
+.icon-chip { border-radius: 16px; }
+.month-grid button, .legend-item, .month-title-btn, .primary, .chip, .gear, .icon,
+.year-row button, .badge, .icon.danger { border-radius: 999px; }
+.legend-item { padding-inline: 14px; }
+.month-grid button { padding-block: 11px; }
+.pie-slice { stroke-linejoin: round; }
