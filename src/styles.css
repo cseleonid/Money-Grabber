@@ -342,3 +342,7 @@ button, input, select { font: inherit; color: inherit; }
   .choice-grid:not(.two) .choice { gap: 8px; padding: var(--pad-sm) 12px; font-size: .8rem; }
   .choice-grid:not(.two) .choice .cat-icon { width: 26px; height: 26px; }
 }
+/* ingranaggio nell'intestazione, titolo del mese centrato */
+.month-head { display: flex !important; justify-content: center; }
+.top { flex-wrap: nowrap; align-items: center; }
+.top .gear { margin-left: auto; }
