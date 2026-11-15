@@ -490,3 +490,18 @@ button, input, select { font: inherit; color: inherit; }
 .card { padding-left: var(--card-pad); padding-right: var(--card-pad); }
 .wizard { padding: var(--card-pad); gap: var(--card-pad); }
 .choice-grid, .choice-grid.two, .choice-grid:not(.two) { gap: var(--card-pad) !important; }
+/* riquadri di scelta: tutti uguali, larghezza contenuta, contenuto centrato */
+:root { --tile: 132px; }
+.choice-grid, .choice-grid.two, .choice-grid:not(.two) {
+  justify-content: center;
+  grid-template-columns: repeat(2, minmax(0, var(--tile))) !important;
+}
+@media (min-width: 560px) { .choice-grid:not(.two) { grid-template-columns: repeat(4, minmax(0, var(--tile))) !important; } }
+.choice, .choice.big, .choice-grid:not(.two) .choice {
+  flex-direction: column !important; justify-content: center !important; align-items: center;
+  gap: 8px !important; min-height: 0 !important; aspect-ratio: 4 / 3;
+  padding: 12px !important; text-align: center !important; border-radius: 24px;
+  font-size: .8rem !important; font-weight: 500; color: var(--text-2);
+}
+.choice.big { font-size: .9rem !important; font-weight: 600; color: var(--text); }
+.choice-grid:not(.two) .choice .cat-icon { width: 30px; height: 30px; }
