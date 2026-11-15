@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
+import { CategoryIcon } from './icons.jsx'
 import {
   createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO, uid,
 } from './data.js'
@@ -129,7 +130,7 @@ export default function App() {
             <p className="hint">Rinomina le categorie e scegli quali sono <b>superflue in automatico</b>.</p>
             {categories.map((c) => (
               <div className="settings-row" key={c.id}>
-                <span className="swatch" style={{ background: `var(--series-${c.slot})` }} />
+                <CategoryIcon id={c.id} slot={c.slot} />
                 <input value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label="Nome categoria" />
                 <label className="check">
                   <input type="checkbox" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} />
@@ -233,7 +234,7 @@ export default function App() {
               const auto = !!c?.autoSuperflua
               return (
                 <li key={e.id} className="expense">
-                  <span className="swatch" style={{ background: `var(--series-${c?.slot ?? 8})` }} />
+                  <span className="icon-chip"><CategoryIcon id={c?.id} slot={c?.slot} size={20} /></span>
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
@@ -301,6 +302,7 @@ export default function App() {
                     aria-label="Controllata"
                   />
                 </label>
+                <span className="icon-chip"><CategoryIcon id={e.categoryId} slot={catById[e.categoryId]?.slot} size={20} /></span>
                 <div className="expense-main">
                   <span className="expense-desc">{e.description}</span>
                   <span className="expense-meta">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { formatEur } from './data.js'
+import { CategoryIcon } from './icons.jsx'
 
 // Grafico a ciambella in SVG puro. Gap di 2px tra le fette (colore superficie),
 // tooltip al passaggio del mouse/tap, legenda con importi e percentuali.
@@ -94,7 +95,7 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
                 onMouseEnter={() => d.value > 0 && setHover(arcs.find((a) => a.id === d.id))}
                 onMouseLeave={() => setHover(null)}
               >
-                <span className="swatch" style={{ background: `var(--series-${d.slot})` }} />
+                <CategoryIcon id={d.id} slot={d.slot} />
                 <span className="legend-name">{d.name}</span>
                 <span className="legend-val">{formatEur(d.value)}</span>
                 <span className="legend-pct">{pct.toFixed(0)}%</span>
