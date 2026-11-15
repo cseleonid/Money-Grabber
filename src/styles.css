@@ -419,3 +419,7 @@ button, input, select { font: inherit; color: inherit; }
 /* altezze ridotte, sempre uguali tra loro */
 :root { --gap-pie: 24px; }
 .pie-wrap { row-gap: max(0px, calc(var(--gap-pie) - 25px)); }
+/* inserimento: spazio uguale tra pallini, titolo, domanda e riquadri */
+.wizard { display: flex; flex-direction: column; gap: 20px; }
+.wizard > * { margin: 0 !important; }
+.wizard .wizard-dots { margin: 0 !important; }
