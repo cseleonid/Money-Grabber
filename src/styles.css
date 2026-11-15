@@ -416,3 +416,6 @@ button, input, select { font: inherit; color: inherit; }
 .wizard-dots { margin-top: 4px; }
 /* inserimento: titoli e domanda centrati */
 .wizard h2, .wizard .wizard-q, .wizard .wizard-done { text-align: center; }
+/* altezze ridotte, sempre uguali tra loro */
+:root { --gap-pie: 24px; }
+.pie-wrap { row-gap: max(0px, calc(var(--gap-pie) - 25px)); }
