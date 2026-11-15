@@ -353,3 +353,8 @@ button, input, select { font: inherit; color: inherit; }
 .legend-item:not(.empty) .legend-val { color: var(--text); font-weight: 600; }
 /* icone sempre colorate, mai opacizzate */
 .cat-icon, .legend-item.empty .cat-icon, .choice .cat-icon, .icon-chip .cat-icon { opacity: 1 !important; filter: none; }
+/* ingranaggio in proporzione al titolo dell'app */
+.top .gear { width: 44px !important; height: 44px !important; color: var(--text-2); opacity: 1; }
+.top .gear svg { width: 28px; height: 28px; stroke-width: 1.6; }
+.top .gear:hover, .top .gear.on { color: var(--text); }
+@media (max-width: 560px) { .top .gear svg { width: 26px; height: 26px; } }
