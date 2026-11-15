@@ -10,6 +10,8 @@ import {
 export const PAYMENTS = { carta: { label: 'Carta', icon: '💳' }, portafoglio: { label: 'Portafoglio', icon: '👛' } }
 const paymentOf = (e) => (e.payment === 'portafoglio' ? 'portafoglio' : 'carta')
 
+const MONTHS = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
+
 export default function App() {
   const [state, setState] = useState({ expenses: [], categories: DEFAULT_CATEGORIES, loading: true })
   const store = useRef(null)
@@ -18,6 +20,7 @@ export default function App() {
   const [filter, setFilter] = useState(null)
   const [payFilter, setPayFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [showMonths, setShowMonths] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -83,20 +86,16 @@ export default function App() {
       <section className="card">
         <div className="card-head month-head">
           <span aria-hidden="true" />
-          <div className="month-nav">
-            <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -1))} aria-label="Mese precedente">‹</button>
-            <label className="month-picker">
-              <span className="month-label">{monthLabel(month)}</span>
-              <input
-                type="month"
-                value={month}
-                onChange={(e) => e.target.value && setMonth(e.target.value)}
-                onClick={(e) => { try { e.currentTarget.showPicker?.() } catch { /* non supportato */ } }}
-                aria-label="Scegli il mese"
-              />
-            </label>
-            <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 1))} aria-label="Mese successivo">›</button>
-          </div>
+          <button
+            type="button"
+            className={`month-title-btn ${showMonths ? 'on' : ''}`}
+            onClick={() => setShowMonths((v) => !v)}
+            aria-expanded={showMonths}
+            aria-controls="month-grid"
+          >
+            <span className="month-title-text">Spese di <b>{monthLabel(month)}</b></span>
+            <svg className="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </button>
           <button
             type="button"
             className={`gear ${showSettings ? 'on' : ''}`}
@@ -105,13 +104,38 @@ export default function App() {
             aria-expanded={showSettings}
             title={showSettings ? 'Chiudi gestione categorie' : 'Gestisci categorie'}
           >
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
           </button>
         </div>
-        <h2 className="month-title">Spese di {monthLabel(month)}</h2>
+        {showMonths && (
+          <div id="month-grid" className="month-panel">
+            <div className="year-row">
+              <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -12))} aria-label="Anno precedente">‹</button>
+              <span>{month.slice(0, 4)}</span>
+              <button type="button" onClick={() => setMonth((m) => shiftMonth(m, 12))} aria-label="Anno successivo">›</button>
+            </div>
+            <div className="month-grid">
+              {MONTHS.map((name, i) => {
+                const key = `${month.slice(0, 4)}-${String(i + 1).padStart(2, '0')}`
+                const isNow = key === monthKey(todayISO())
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`${key === month ? 'on' : ''} ${isNow ? 'now' : ''}`}
+                    aria-pressed={key === month}
+                    onClick={() => { setMonth(key); setShowMonths(false) }}
+                  >
+                    {name}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {showSettings && (
           <div className="settings">

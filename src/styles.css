@@ -248,3 +248,31 @@ button, input, select { font: inherit; color: inherit; }
   .month-nav button { width: 36px; height: 40px; font-size: 1.9rem; }
   .gear { width: 34px; height: 34px; }
 }
+/* titolo cliccabile per scegliere il mese */
+.month-head { grid-template-columns: 32px minmax(0, 1fr) 32px !important; }
+.month-title-btn { justify-self: center; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: none; background: none; border-radius: 10px; cursor: pointer; color: var(--text); min-width: 0; }
+.month-title-btn:hover, .month-title-btn.on { background: var(--bg); }
+.month-title-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.month-title-text { font-size: 1.3rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.month-title-text b { font-weight: 700; }
+.chev { color: var(--text-2); flex-shrink: 0; transition: transform .2s; }
+.month-title-btn.on .chev { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+.month-panel { margin-top: 10px; padding: 12px; border-radius: 12px; background: var(--bg); display: flex; flex-direction: column; gap: 10px; }
+.year-row { display: flex; justify-content: center; align-items: center; gap: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.year-row button { width: 32px; height: 32px; border: none; background: none; border-radius: 8px; cursor: pointer; font-size: 1.4rem; color: var(--text-2); }
+.year-row button:hover { color: var(--text); background: var(--surface); }
+.month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.month-grid button { padding: 10px 2px; border: none; border-radius: 10px; background: var(--surface); cursor: pointer; font-size: .9rem; }
+.month-grid button.now { font-weight: 700; }
+.month-grid button.on { background: var(--accent); color: #fff; font-weight: 700; }
+.month-grid button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* ingranaggio più piccolo e discreto */
+.gear { width: 30px !important; height: 30px !important; color: var(--text-3); opacity: .7; }
+.gear:hover, .gear.on { opacity: 1; }
+@media (max-width: 420px) { .month-title-text { font-size: 1.12rem; } .month-grid button { font-size: .8rem; } }
+.chev { display: block; transform-origin: 50% 50%; transform-box: fill-box; }
+.month-title-btn.on .chev { transform: rotate(180deg); }
+/* voci della legenda: angoli più arrotondati, senza contorno */
+.legend-item { border: none !important; border-radius: 14px; }
+.legend-item.active { background: var(--bg); }
