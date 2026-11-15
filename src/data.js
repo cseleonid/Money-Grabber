@@ -57,7 +57,9 @@ export function monthLabel(key) {
 }
 
 const eur = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
-export const formatEur = (n) => eur.format(n)
+const eurInt = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+// cifre intere senza decimali (0 €, 650 €); con centesimi a due decimali (23,40 €)
+export const formatEur = (n) => (Math.round(n * 100) % 100 === 0 ? eurInt : eur).format(n)
 
 export const uid = () =>
   (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()))
