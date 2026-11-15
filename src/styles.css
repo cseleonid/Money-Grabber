@@ -361,3 +361,8 @@ button, input, select { font: inherit; color: inherit; }
 /* più spazio tra il titolo e il grafico */
 .month-head + .pie-wrap, .month-panel + .pie-wrap, .card-head + .pie-wrap { margin-top: 36px; }
 .pie-wrap { row-gap: 32px; }
+/* spaziatura uguale: bordo→titolo = titolo→grafico = grafico→legenda (40px visivi) */
+:root { --gap-pie: 40px; }
+.card:first-of-type { padding-top: calc(var(--gap-pie) - 6px); }
+.month-head + .pie-wrap, .month-panel + .pie-wrap { margin-top: calc(var(--gap-pie) - 6px - 13px); }
+.pie-wrap { row-gap: calc(var(--gap-pie) - 13px - 12px); align-items: start; }
