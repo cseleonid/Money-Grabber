@@ -351,3 +351,5 @@ button, input, select { font: inherit; color: inherit; }
 .legend-item .legend-name, .legend-item.empty .legend-name { color: var(--text); font-weight: 600; }
 .legend-item.empty .legend-val { color: var(--text-3); }
 .legend-item:not(.empty) .legend-val { color: var(--text); font-weight: 600; }
+/* icone sempre colorate, mai opacizzate */
+.cat-icon, .legend-item.empty .cat-icon, .choice .cat-icon, .icon-chip .cat-icon { opacity: 1 !important; filter: none; }
