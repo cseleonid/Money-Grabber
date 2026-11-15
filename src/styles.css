@@ -287,3 +287,12 @@ button, input, select { font: inherit; color: inherit; }
 .choice { font-size: .7rem; font-weight: 500; color: var(--text-2); }
 .choice.big { font-size: .85rem; font-weight: 600; color: var(--text); }
 @media (max-width: 420px) { .choice { font-size: .66rem; min-height: 70px; } }
+/* passaggio centrato con pallini */
+.wizard-top { display: grid; grid-template-columns: 1fr auto 1fr; }
+.wizard-top .back { justify-self: start; }
+.wizard-step { justify-self: center; }
+.wizard-dots { display: flex; justify-content: center; gap: 8px; margin: 8px 0 14px; }
+.wizard-dots span { width: 8px; height: 8px; border-radius: 999px; background: var(--border); transition: width .2s, background .2s; }
+.wizard-dots span.past { background: var(--accent); opacity: .45; }
+.wizard-dots span.cur { width: 22px; background: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .wizard-dots span { transition: none; } }

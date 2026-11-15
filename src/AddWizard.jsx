@@ -63,9 +63,12 @@ export default function AddWizard({ categories, payments, onAdd }) {
           <button type="button" className="link back" onClick={() => setStep(step - 1)}>‹ Indietro</button>
         ) : <span />}
         <span className="wizard-step">Passaggio {step} di {TOTAL}</span>
+        <span aria-hidden="true" />
       </div>
-      <div className="wizard-bar" aria-hidden="true">
-        <span style={{ width: `${(step / TOTAL) * 100}%` }} />
+      <div className="wizard-dots" aria-hidden="true">
+        {STEPS.map((_, i) => (
+          <span key={i} className={i + 1 === step ? 'cur' : i + 1 < step ? 'past' : ''} />
+        ))}
       </div>
       <h2 id="wizard-title">{step === 1 ? 'Aggiungi spesa' : STEPS[step - 1]}</h2>
 
