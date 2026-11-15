@@ -211,3 +211,12 @@ button, input, select { font: inherit; color: inherit; }
 .summary dd { margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 600; text-align: right; }
 .summary dd.num { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
 @media (max-width: 420px) { .choice-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; } .choice { font-size: .72rem; min-height: 76px; } }
+/* selettore mese centrato, senza contorni */
+.month-head { display: grid; grid-template-columns: 38px 1fr 38px; align-items: center; }
+.month-head .month-nav { justify-self: center; gap: 2px; }
+.month-nav button, .month-nav input { border: none !important; background: none !important; }
+.month-nav button { color: var(--text-2); font-size: 1.5rem; }
+.month-nav button:hover { color: var(--text); background: var(--bg) !important; }
+.month-nav button:focus-visible, .month-nav input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.month-nav input { font-weight: 600; font-size: 1rem; text-align: center; padding: 0 4px; }
+.month-title { text-align: center; }

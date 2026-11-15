@@ -81,7 +81,8 @@ export default function App() {
 
       {/* 1. Grafico a torta per macro categorie */}
       <section className="card">
-        <div className="card-head">
+        <div className="card-head month-head">
+          <span aria-hidden="true" />
           <div className="month-nav">
             <button type="button" onClick={() => setMonth((m) => shiftMonth(m, -1))} aria-label="Mese precedente">‹</button>
             <input type="month" value={month} onChange={(e) => e.target.value && setMonth(e.target.value)} aria-label="Mese" />
@@ -209,7 +210,7 @@ export default function App() {
       {/* 3. Box spese superflue da controllare */}
       <section className="card superflue">
         <div className="card-head">
-          <h2>⚠️ Spese superflue da controllare</h2>
+          <h2>Spese superflue da controllare</h2>
         </div>
         <div className="super-stats">
           <div>
