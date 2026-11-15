@@ -29,3 +29,17 @@ export function CategoryIcon({ id, slot, size = 20 }) {
     </svg>
   )
 }
+
+const PAY_PATHS = {
+  carta: <><rect x="3" y="5.5" width="18" height="13" rx="2" /><path d="M3 9.5h18" /><path d="M6.5 14.5h4" /></>,
+  portafoglio: <><path d="M4 7.5V17a2 2 0 0 0 2 2h13.5v-4" /><path d="M19.5 10.5V7.5H6a2 2 0 0 1 0-4h11.5v4" /><path d="M21 10.5h-4a2 2 0 0 0 0 4h4z" /></>,
+}
+
+export function PaymentIcon({ id, size = 20 }) {
+  return (
+    <svg className="pay-icon" viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor"
+      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {PAY_PATHS[id] ?? PAY_PATHS.carta}
+    </svg>
+  )
+}

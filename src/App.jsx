@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import PieChart from './PieChart.jsx'
 import { CategoryIcon } from './icons.jsx'
+import AddWizard from './AddWizard.jsx'
 import {
-  createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO, uid,
+  createStore, DEFAULT_CATEGORIES, formatEur, monthKey, monthLabel, shiftMonth, todayISO,
 } from './data.js'
 
-const emptyForm = () => ({ description: '', amount: '', date: todayISO(), categoryId: 'alimentari', payment: 'carta', superflua: false })
 
 export const PAYMENTS = { carta: { label: 'Carta', icon: '💳' }, portafoglio: { label: 'Portafoglio', icon: '👛' } }
 const paymentOf = (e) => (e.payment === 'portafoglio' ? 'portafoglio' : 'carta')
@@ -15,7 +15,6 @@ export default function App() {
   const store = useRef(null)
   const [pendingDelete, setPendingDelete] = useState(null)
   const [month, setMonth] = useState(() => monthKey(todayISO()))
-  const [form, setForm] = useState(emptyForm)
   const [filter, setFilter] = useState(null)
   const [payFilter, setPayFilter] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
@@ -56,26 +55,6 @@ export default function App() {
   const superflueTotal = superflue.reduce((s, e) => s + e.amount, 0)
   const daControllare = superflue.filter((e) => !e.controllata)
 
-  const addExpense = (ev) => {
-    ev.preventDefault()
-    const amount = parseFloat(String(form.amount).replace(',', '.'))
-    if (!form.description.trim() || !(amount > 0)) return
-    const expense = {
-      id: uid(),
-      description: form.description.trim(),
-      amount: Math.round(amount * 100) / 100,
-      date: form.date,
-      categoryId: form.categoryId,
-      payment: form.payment,
-      superflua: form.superflua,
-      controllata: false,
-    }
-    if (!store.current) return
-    store.current.addExpense(expense)
-    setMonth(monthKey(form.date))
-    setForm((f) => ({ ...emptyForm(), date: f.date, categoryId: f.categoryId, payment: f.payment }))
-  }
-
   const patchExpense = (id, patch) => store.current?.patchExpense(id, patch)
   const removeExpense = (id) => {
     // niente confirm(): primo tocco arma, secondo tocco elimina
@@ -90,7 +69,6 @@ export default function App() {
   const patchCategory = (id, patch) =>
     store.current?.setCategories(categories.map((c) => (c.id === id ? { ...c, ...patch } : c)))
 
-  const formAuto = !!catById[form.categoryId]?.autoSuperflua
 
   return (
     <div className="app">
@@ -166,53 +144,12 @@ export default function App() {
         />
       </section>
 
-      {/* Inserimento */}
-      <section className="card">
-        <h2>Aggiungi spesa</h2>
-        <form className="add-form" onSubmit={addExpense}>
-          <input
-            placeholder="Descrizione (es. Spesa Esselunga)"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-          />
-          <input
-            placeholder="Importo €"
-            inputMode="decimal"
-            value={form.amount}
-            onChange={(e) => setForm({ ...form, amount: e.target.value })}
-            required
-          />
-          <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required />
-          <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
-            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-          <div className="pay-toggle" role="radiogroup" aria-label="Metodo di pagamento">
-            {Object.entries(PAYMENTS).map(([k, p]) => (
-              <button
-                key={k}
-                type="button"
-                role="radio"
-                aria-checked={form.payment === k}
-                className={form.payment === k ? 'on' : ''}
-                onClick={() => setForm({ ...form, payment: k })}
-              >
-                {p.icon} {p.label}
-              </button>
-            ))}
-          </div>
-          <label className="check">
-            <input
-              type="checkbox"
-              checked={form.superflua || formAuto}
-              disabled={formAuto}
-              onChange={(e) => setForm({ ...form, superflua: e.target.checked })}
-            />
-            Superflua {formAuto && <small>(auto per categoria)</small>}
-          </label>
-          <button type="submit" className="primary">Aggiungi</button>
-        </form>
-      </section>
+      {/* Inserimento a passaggi */}
+      <AddWizard
+        categories={categories}
+        payments={PAYMENTS}
+        onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
+      />
 
       {/* 2. Lista spese */}
       <section className="card">
