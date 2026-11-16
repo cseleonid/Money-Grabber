@@ -3,6 +3,7 @@ import { CategoryIcon } from './icons.jsx'
 import { BOXES, normalizeLayout } from './Movable.jsx'
 
 const BOX_ICONS = {
+  aggiungi: <><circle cx="12" cy="12" r="8.5" /><path d="M12 8v8M8 12h8" /></>,
   grafico: <><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5H12Z" /><path d="M15 3.8A8.5 8.5 0 0 1 20.2 9H15Z" /></>,
   superflue: <path d="m12 3.8 2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.7l-5.1 2.7 1-5.6-4.1-4 5.7-.8Z" />,
 }

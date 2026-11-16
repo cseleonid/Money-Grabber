@@ -307,10 +307,9 @@ export default function App() {
         <div className="card-head sub-head">
           <h2>
             Lista spese {filter && <small>· {catById[filter]?.name}</small>}
-            {payFilter && <small> · {PAYMENTS[payFilter].label}</small>}
           </h2>
-          {(filter || payFilter) && (
-            <button type="button" className="link" onClick={() => { setFilter(null); setPayFilter(null) }}>Mostra tutte</button>
+          {filter && (
+            <button type="button" className="link" onClick={() => setFilter(null)}>Mostra tutte</button>
           )}
         </div>
         {listed.length === 0 ? (
@@ -356,16 +355,15 @@ export default function App() {
           </ul>
         )}
         </div>
-        <div className="add-inner-box">
-        <AddWizard
-          embedded
-          history={expenses}
-          categories={categories}
-          payments={PAYMENTS}
-          onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
-        />
-        </div>
       </section>
+            </>),
+            aggiungi: (<>
+      <AddWizard
+        history={expenses}
+        categories={categories}
+        payments={PAYMENTS}
+        onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
+      />
             </>),
             superflue: (<>
       <section className="card superflue">
