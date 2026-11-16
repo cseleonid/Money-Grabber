@@ -62,19 +62,24 @@ export function SectionIcon({ id, size = 22 }) {
   )
 }
 
-// Polipo minimal: testa a cupola, due occhi e cinque tentacoli
+// Polipo simpatico: testa tonda, occhioni, sorriso, guance e tentacoli arricciati
 export function OctoIcon({ size = 30 }) {
   return (
     <svg className="octo-icon" viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor"
-      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6.5 12.5V10a5.5 5.5 0 0 1 11 0v2.5" />
-      <path d="M6.5 12.5c0 3-2.6 3.4-3.3 5.6" />
-      <path d="M9.4 13c.1 3.3-1 5-2.2 6.8" />
-      <path d="M12 13.2c.4 2.4 1 4.2-.4 6.6" />
-      <path d="M14.6 13c-.1 3.3 1 5 2.2 6.8" />
-      <path d="M17.5 12.5c0 3 2.6 3.4 3.3 5.6" />
-      <circle cx="10" cy="9.6" r=".75" fill="currentColor" stroke="none" />
-      <circle cx="14" cy="9.6" r=".75" fill="currentColor" stroke="none" />
+      strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5.3 12.6V10a6.7 6.7 0 0 1 13.4 0v2.6" />
+      <circle cx="9.4" cy="9.3" r="1.25" fill="currentColor" stroke="none" />
+      <circle cx="14.6" cy="9.3" r="1.25" fill="currentColor" stroke="none" />
+      <circle cx="9.8" cy="8.9" r=".35" fill="var(--raised, #fff)" stroke="none" />
+      <circle cx="15" cy="8.9" r=".35" fill="var(--raised, #fff)" stroke="none" />
+      <path d="M10.4 11.7c.9.8 2.3.8 3.2 0" />
+      <circle cx="7.6" cy="11.4" r=".75" fill="currentColor" stroke="none" opacity=".35" />
+      <circle cx="16.4" cy="11.4" r=".75" fill="currentColor" stroke="none" opacity=".35" />
+      <path d="M5.3 12.6c-.2 2.4-2.5 3-2.3 5 .1 1.2 1.6 1.4 2.1.5" />
+      <path d="M8.5 13.1c0 2.7-1.3 4.4-.7 6.1.4 1.1 1.9 1 2.1-.2" />
+      <path d="M12 13.3v5.2c0 1.2 1.1 1.7 1.8 1" />
+      <path d="M15.5 13.1c0 2.7 1.3 4.4.7 6.1-.4 1.1-1.9 1-2.1-.2" />
+      <path d="M18.7 12.6c.2 2.4 2.5 3 2.3 5-.1 1.2-1.6 1.4-2.1.5" />
     </svg>
   )
 }

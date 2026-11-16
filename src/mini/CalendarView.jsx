@@ -66,7 +66,7 @@ export default function CalendarView({ items, store }) {
         <form className="mini-add" onSubmit={add}>
           <input className="field grow" placeholder="Nuovo evento" value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Evento" />
           <input className="field time" type="time" value={time} onChange={(e) => setTime(e.target.value)} aria-label="Ora (facoltativa)" />
-          <button type="submit" className="primary" disabled={!title.trim()}>Aggiungi</button>
+          <button type="submit" className="round-btn accent" disabled={!title.trim()} aria-label="Aggiungi">+</button>
         </form>
         {dayEvents.length === 0 ? <p className="empty-msg">Nessun evento in questo giorno.</p> : (
           <ul className="mini-list">

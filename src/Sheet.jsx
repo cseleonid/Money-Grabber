@@ -80,3 +80,11 @@ export const Section = ({ icon, title, children }) => (
     {children}
   </section>
 )
+
+// Intestazione uguale per tutte le pagine: titolo grande + pulsanti tondi a icona
+export const PageHeader = ({ title, children }) => (
+  <header className="page-head">
+    <h1>{title}</h1>
+    {children && <div className="page-actions">{children}</div>}
+  </header>
+)

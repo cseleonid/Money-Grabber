@@ -26,7 +26,7 @@ export default function TodoList({ items, store }) {
       <form className="mini-add" onSubmit={add}>
         <input className="field grow" placeholder="Nuova attività" value={text} onChange={(e) => setText(e.target.value)} aria-label="Attività" />
         <input className="field date" type="date" value={due} onChange={(e) => setDue(e.target.value)} aria-label="Scadenza (facoltativa)" />
-        <button type="submit" className="primary" disabled={!text.trim()}>Aggiungi</button>
+        <button type="submit" className="round-btn accent" disabled={!text.trim()} aria-label="Aggiungi">+</button>
       </form>
       <div className="seg" role="tablist" aria-label="Filtro attività">
         <button type="button" role="tab" aria-selected={tab === 'open'} className={tab === 'open' ? 'on' : ''} onClick={() => setTab('open')}>Da fare · {open.length}</button>

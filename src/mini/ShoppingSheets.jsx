@@ -36,17 +36,13 @@ export function ListsSheet({ onClose }) {
 // ⚙ di una singola lista
 export function ListSheet({ list, items, store, onClose, onDeleted, initials, avColor }) {
   const theme = themeOf(list)
-  const [name, setName] = useState(list.name)
   const [person, setPerson] = useState('')
   const [confirm, setConfirm] = useState(false)
   const members = list.members || []
   const patch = (p) => store?.patchItem('shl', list.id, p)
 
   return (
-    <Sheet scope="list" label={list.name} title="Questa lista" color={theme.color} onClose={() => { if (name.trim() && name.trim() !== list.name) patch({ name: name.trim() }); onClose() }}>
-      <Section icon={I.pencil} title="Nome">
-        <input className="field sheet-field" value={name} onChange={(e) => setName(e.target.value)} onBlur={() => name.trim() && name.trim() !== list.name && patch({ name: name.trim() })} aria-label="Nome della lista" />
-      </Section>
+    <Sheet scope="list" label={list.name} title="Questa lista" color={theme.color} onClose={onClose}>
       <Section icon={I.tag} title="Tema">
         <ThemePicker value={theme.id} onChange={(id) => patch({ theme: id, color: THEMES.find((t) => t.id === id).color })} />
       </Section>

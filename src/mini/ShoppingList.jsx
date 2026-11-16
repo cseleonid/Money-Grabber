@@ -34,7 +34,7 @@ export default function ShoppingList({ items: all, listId, store }) {
         <form className="mini-add" onSubmit={add}>
           <input className="field grow" placeholder="es. Latte" value={text} onChange={(e) => setText(e.target.value)} aria-label="Prodotto" />
           <input className="field qty" placeholder="Qtà" value={qty} onChange={(e) => setQty(e.target.value)} aria-label="Quantità" />
-          <button type="submit" className="primary" disabled={!text.trim()}>Aggiungi</button>
+          <button type="submit" className="round-btn accent" disabled={!text.trim()} aria-label="Aggiungi">+</button>
         </form>
         {todo.length === 0 ? <p className="empty-msg">La lista è vuota. Aggiungi il primo prodotto qui sopra.</p> : (
           <ul className="mini-list">{todo.map((i) => <Row key={i.id} i={i} />)}</ul>

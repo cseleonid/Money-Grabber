@@ -6,7 +6,8 @@ import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
 import { applyTheme, getPrefs } from './prefs.js'
 import AppSheet from './AppSheet.jsx'
-import { Ico, I } from './Sheet.jsx'
+import { Ico, I, PageHeader } from './Sheet.jsx'
+import PersonaleSheet from './PersonaleSheet.jsx'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
@@ -37,6 +38,7 @@ export default function App() {
   const [section, setSection] = useState(sectionFromHash)
   const [octoOpen, setOctoOpen] = useState(false)
   const [appSheet, setAppSheet] = useState(false)
+  const [persSheet, setPersSheet] = useState(false)
   useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
@@ -172,46 +174,15 @@ export default function App() {
 
   return (
     <div className="app">
-      {section === 'personale' && <button type="button" className="side-tab" onClick={() => setMenuOpen(true)} aria-label="Apri menu" aria-expanded={menuOpen} aria-controls="side-menu">
-        <span>tester</span>
-      </button>}
-      {menuOpen && <div className="side-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
-      <aside id="side-menu" className={`side ${menuOpen ? 'open' : ''}`} aria-label="Menu">
-        <div className="side-head">
-          <h1>Money Grabber</h1>
-          <button type="button" className="side-close" onClick={() => setMenuOpen(false)} aria-label="Chiudi menu">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
-          </button>
-        </div>
-        <nav className="side-nav">
-          <button
-            type="button"
-            className={`side-item ${showSettings ? 'on' : ''}`}
-            aria-expanded={showSettings}
-            onClick={() => {
-              setShowSettings((v) => !v)
-              setMenuOpen(false)
-              setTimeout(() => document.querySelector('.settings')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
-            }}
-          >
-            <span className="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg></span>
-            Gestisci categorie
-          </button>
-        </nav>
-      </aside>
       <div className="main">
-        {section !== 'personale' && section !== 'spesa' && (
-          <header className="section-head">
-            <span className="section-emoji" aria-hidden="true"><SectionIcon id={current.id} size={30} /></span>
-            <div>
-              <h1>{current.name}</h1>
-              <p>{current.hint}</p>
-            </div>
-          </header>
+        {section === 'personale' && (
+          <PageHeader title="Personale">
+            <button type="button" className="round-btn scope-screen-btn" onClick={() => setPersSheet(true)} aria-label="Impostazioni di questa schermata">
+              <Ico d={I.sliders} />
+            </button>
+          </PageHeader>
         )}
+        {['calendario', 'todo', 'condivise'].includes(section) && <PageHeader title={current.name} />}
         {section === 'calendario' && <CalendarView items={state.lists?.cal || []} store={store.current} />}
         {section === 'spesa' && <ShoppingLists lists={state.lists?.shl || []} items={state.lists?.shop || []} store={store.current} />}
         {section === 'todo' && <TodoList items={state.lists?.todo || []} store={store.current} />}
@@ -269,21 +240,6 @@ export default function App() {
           </div>
         </div>
 
-        {showSettings && (
-          <div className="settings">
-            <p className="hint">Rinomina le categorie e scegli quali sono <b>superflue in automatico</b>.</p>
-            {categories.map((c) => (
-              <div className="settings-row" key={c.id}>
-                <CategoryIcon id={c.id} slot={c.slot} size={26} />
-                <input value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label="Nome categoria" />
-                <label className="check">
-                  <input type="checkbox" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} />
-                  superflua
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
 
         <PieChart data={byCategory} total={total} selected={filter} onSelect={(id) => { setFilter(id); setPayFilter(null) }} />
         <p className="pay-split">
@@ -468,6 +424,10 @@ export default function App() {
           <OctoIcon size={30} />
         </button>
       </div>
+      {persSheet && (
+        <PersonaleSheet categories={categories} patchCategory={patchCategory} layout={state.layout}
+          setLayout={(l) => store.current?.setLayout(l)} onClose={() => setPersSheet(false)} />
+      )}
       {appSheet && <AppSheet onClose={() => setAppSheet(false)} />}
     </div>
   )

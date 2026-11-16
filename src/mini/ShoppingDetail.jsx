@@ -111,17 +111,21 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
         )}
       </div>
 
-      {renaming ? (
-        <form className="shop-rename" onSubmit={(e) => { e.preventDefault(); if (name.trim()) store?.patchItem('shl', list.id, { name: name.trim() }); setRenaming(false) }}>
-          <input className="field" autoFocus value={name} onChange={(e) => setName(e.target.value)} aria-label="Nome della lista" />
-          <button type="submit" className="primary">Salva</button>
-        </form>
-      ) : (
-        <div className="shop-title">
-          <h1>{list.name}</h1>
-          {avatars}
-        </div>
-      )}
+      {/* nome della lista: titolo grande e centrato, si modifica toccandolo (senza riquadro) */}
+      <div className="shop-title">
+        {list.virtual ? <h1>{list.name}</h1> : (
+          <input
+            className="title-edit"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={() => { const n = name.trim(); if (n && n !== list.name) store?.patchItem('shl', list.id, { name: n }); else setName(list.name) }}
+            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+            aria-label="Nome della lista (tocca per modificare)"
+            size={Math.max(4, name.length)}
+          />
+        )}
+        {avatars}
+      </div>
 
       <form className="shop-add" onSubmit={add}>
         <input className="field" placeholder="Aggiungi un prodotto (es. Pane in cassetta)" value={text} onChange={(e) => setText(e.target.value)} aria-label="Prodotto" />

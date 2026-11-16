@@ -26,8 +26,8 @@ export function ThemePicker({ value, onChange }) {
     <div className="theme-pick" role="radiogroup" aria-label="Tema della lista">
       {THEMES.map((t) => (
         <button key={t.id} type="button" role="radio" aria-checked={value === t.id} className={`theme-chip lc-${t.color} ${value === t.id ? 'on' : ''}`} onClick={() => onChange(t.id)}>
-          <ThemeIcon theme={t} size={22} />
-          <span>{t.name}</span>
+          <span className="tc-circle"><ThemeIcon theme={t} size={34} />{value === t.id && <span className="tc-check" aria-hidden="true">✓</span>}</span>
+          <span className="tc-label">{t.name}</span>
         </button>
       ))}
     </div>

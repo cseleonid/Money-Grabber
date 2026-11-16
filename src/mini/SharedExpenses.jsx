@@ -57,7 +57,7 @@ export default function SharedExpenses({ people, expenses, store }) {
         <h2 className="mini-title">Persone <span className="count">{people.length}</span></h2>
         <form className="mini-add" onSubmit={addPerson}>
           <input className="field grow" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} aria-label="Nome persona" />
-          <button type="submit" className="primary" disabled={!name.trim()}>Aggiungi</button>
+          <button type="submit" className="round-btn accent" disabled={!name.trim()} aria-label="Aggiungi">+</button>
         </form>
         {people.length === 0 ? <p className="empty-msg">Aggiungi le persone con cui dividi le spese.</p> : (
           <ul className="chips-list">
@@ -83,7 +83,7 @@ export default function SharedExpenses({ people, expenses, store }) {
                 {people.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </label>
-            <button type="submit" className="primary" disabled={!desc.trim() || !(value > 0)}>Aggiungi</button>
+            <button type="submit" className="round-btn accent" disabled={!desc.trim() || !(value > 0)} aria-label="Aggiungi">+</button>
           </form>
           <p className="hint">Divisa in parti uguali tra tutte le {people.length} persone.</p>
         </section>

@@ -137,7 +137,7 @@ export default function MovableBoxes({ layout, onChange, blocks }) {
               {hidden.map((id) => (
                 <button key={id} type="button" onClick={() => show(id)}>+ {BOXES.find((b) => b.id === id).name}</button>
               ))}
-              <button type="button" className="cancel" onClick={() => setAdding(false)}>Annulla</button>
+              <button type="button" className="btn-secondary" onClick={() => setAdding(false)}>Annulla</button>
             </div>
           ) : (
             <button type="button" className="add-box-btn" onClick={() => setAdding(true)}>+ Aggiungi riquadro</button>

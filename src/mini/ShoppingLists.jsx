@@ -115,7 +115,7 @@ export default function ShoppingLists({ lists, items, store }) {
             {addingTo === l.id && (
               <form className="list-person-form" onSubmit={addPerson(l)}>
                 <input className="field" autoFocus placeholder="Nome" value={person} onChange={(e) => setPerson(e.target.value)} aria-label="Nome persona" />
-                <button type="submit" className="primary" disabled={!person.trim()}>Aggiungi</button>
+                <button type="submit" className="round-btn accent" disabled={!person.trim()} aria-label="Aggiungi">+</button>
               </form>
             )}
             {!editing ? (
@@ -134,7 +134,7 @@ export default function ShoppingLists({ lists, items, store }) {
           <input className="field" autoFocus placeholder="Nome della lista (es. Spesa di casa)" value={newName} onChange={(e) => setNewName(e.target.value)} aria-label="Nome della lista" />
           <ThemePicker value={newTheme} onChange={setNewTheme} />
           <div className="row-btns">
-            <button type="button" className="link" onClick={() => setCreating(false)}>Annulla</button>
+            <button type="button" className="btn-secondary" onClick={() => setCreating(false)}>Annulla</button>
             <button type="submit" className="primary" disabled={!newName.trim()}>Crea</button>
           </div>
         </form>
