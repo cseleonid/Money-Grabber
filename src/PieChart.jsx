@@ -24,7 +24,7 @@ function arcPath(a0, a1) {
   return `M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${INNER},${INNER} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-export default function PieChart({ data, total, selected, onSelect, hideEmpty = false, centerLabel = 'Totale' }) {
+export default function PieChart({ data, total, selected, onSelect, onOpen, hideEmpty = false, centerLabel = 'Totale' }) {
   const [hover, setHover] = useState(null)
   const slices = data.filter((d) => d.value > 0)
 
@@ -90,13 +90,14 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
               <button
                 type="button"
                 className={`legend-item ${selected === d.id ? 'active' : ''} ${d.value === 0 ? 'empty' : ''}`}
-                onClick={() => onSelect(selected === d.id ? null : d.id)}
+                onClick={() => (onOpen ? onOpen(d.id) : onSelect(selected === d.id ? null : d.id))}
                 onMouseEnter={() => d.value > 0 && setHover(arcs.find((a) => a.id === d.id))}
                 onMouseLeave={() => setHover(null)}
               >
                 <CategoryIcon id={d.id} slot={d.slot} size={28} />
                 <span className="legend-name">{d.name}</span>
                 <span className="legend-val">{formatEur(d.value)}</span>
+                {onOpen && <span className="legend-chev" aria-hidden="true">›</span>}
               </button>
             </li>
           )

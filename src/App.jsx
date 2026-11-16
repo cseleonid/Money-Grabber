@@ -8,6 +8,7 @@ import { applyTheme, getPrefs } from './prefs.js'
 import AppSheet from './AppSheet.jsx'
 import { Ico, I, PageHeader } from './Sheet.jsx'
 import PersonaleSheet from './PersonaleSheet.jsx'
+import CategoryPage from './CategoryPage.jsx'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
@@ -39,6 +40,7 @@ export default function App() {
   const [octoOpen, setOctoOpen] = useState(false)
   const [appSheet, setAppSheet] = useState(false)
   const [persSheet, setPersSheet] = useState(false)
+  const [catPage, setCatPage] = useState(null) // categoria aperta in Personale
   useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
@@ -175,6 +177,12 @@ export default function App() {
       setTimeout(() => setPendingDelete((p) => (p === id ? null : p)), 3000)
     }
   }
+  const moveCategory = (id, delta) => {
+    const i = categories.findIndex((c) => c.id === id), j = i + delta
+    if (i < 0 || j < 0 || j >= categories.length) return
+    const next = categories.slice(); [next[i], next[j]] = [next[j], next[i]]
+    store.current?.setCategories(next)
+  }
   const patchCategory = (id, patch) =>
     store.current?.setCategories(categories.map((c) => (c.id === id ? { ...c, ...patch } : c)))
 
@@ -182,7 +190,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="main">
-        {section === 'personale' && (
+        {section === 'personale' && !catPage && (
           <PageHeader title="Personale">
             <button type="button" className="round-btn scope-screen-btn" onClick={() => setPersSheet(true)} aria-label="Impostazioni di questa schermata">
               <Ico d={I.sliders} />
@@ -194,7 +202,21 @@ export default function App() {
         {section === 'spesa' && <ShoppingLists lists={state.lists?.shl || []} items={state.lists?.shop || []} store={store.current} />}
         {section === 'todo' && <TodoList items={state.lists?.todo || []} store={store.current} />}
         {section === 'condivise' && <SharedExpenses people={state.lists?.ppl || []} expenses={state.lists?.shx || []} store={store.current} />}
-        {section === 'personale' && (<>
+        {section === 'personale' && catPage && catById[catPage] && (
+          <CategoryPage
+            category={catById[catPage]}
+            expenses={monthExpenses.filter((e) => e.categoryId === catPage)}
+            monthTotal={total}
+            monthName={monthLabel(month)}
+            onBack={() => { setCatPage(null); window.scrollTo?.({ top: 0 }) }}
+            onToggleSuperflua={(e) => patchExpense(e.id, { superflua: !e.superflua })}
+            onRemove={removeExpense}
+            isSuperflua={isSuperflua}
+            paymentOf={paymentOf}
+            pendingDelete={pendingDelete}
+          />
+        )}
+        {section === 'personale' && !catPage && (<>
 
       {state.error && <p className="error-msg">⚠ {state.error}. Ricarica la pagina e riprova.</p>}
       {state.loading && <p className="empty-msg">Caricamento delle tue spese…</p>}
@@ -261,6 +283,7 @@ export default function App() {
           centerLabel={payFilter === 'carta' ? 'Con carta' : payFilter === 'portafoglio' ? 'Dal portafoglio' : 'Totale del mese'}
           selected={filter}
           onSelect={(id) => setFilter(id)}
+          onOpen={(id) => { setCatPage(id); window.scrollTo?.({ top: 0 }) }}
         />
         {total > 0 && (
           <div className="split-bar" aria-label="Come hai pagato le spese del mese">
@@ -441,7 +464,7 @@ export default function App() {
         </button>
       </div>
       {persSheet && (
-        <PersonaleSheet categories={categories} patchCategory={patchCategory} layout={state.layout}
+        <PersonaleSheet categories={categories} patchCategory={patchCategory} moveCategory={moveCategory} layout={state.layout}
           setLayout={(l) => store.current?.setLayout(l)} onClose={() => setPersSheet(false)} />
       )}
       {appSheet && <AppSheet onClose={() => setAppSheet(false)} />}
