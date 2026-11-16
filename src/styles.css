@@ -1124,3 +1124,24 @@ body { transition: none !important; }
 @media (max-width: 420px) { .list-create { font-size: 1.6rem; } }
 /* pannelli: niente linea colorata sul bordo superiore */
 .scope-app, .scope-screen, .scope-list { border-top: none !important; }
+
+/* portafoglio dentro le spese del mese */
+.pay-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 4px; border-radius: 999px; background: var(--bg); margin-top: var(--gap-item); }
+.pay-seg button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 6px; border: none; border-radius: 999px; background: none; color: var(--text-2); font-weight: 700; font-size: .9rem; cursor: pointer; }
+.pay-seg button.on { background: var(--surface); color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+.pay-seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.split-bar { display: flex; flex-direction: column; gap: 10px; margin-top: var(--gap-block); }
+.split-track { display: flex; gap: 3px; height: 14px; }
+.split-seg { flex-basis: 0; min-width: 10px; border: none; border-radius: 999px; padding: 0; cursor: pointer; transition: opacity .15s; }
+.split-seg.carta { background: var(--accent); }
+.split-seg.portafoglio { background: var(--series-4); }
+.split-seg.dim { opacity: .3; }
+.split-seg:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.split-legend { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.split-item { display: inline-flex; align-items: center; gap: 6px; color: var(--text); }
+.split-item i { width: 10px; height: 10px; border-radius: 999px; }
+.split-item.carta i { background: var(--accent); }
+.split-item.portafoglio i { background: var(--series-4); }
+.split-item small { color: var(--text-2); font-weight: 600; }
+.pay-split { display: none; }
+.split-legend { font-size: .92rem; column-gap: 16px; justify-content: flex-start; }

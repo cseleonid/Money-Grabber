@@ -143,6 +143,13 @@ export default function App() {
     value: monthExpenses.filter((e) => e.categoryId === c.id).reduce((s, e) => s + e.amount, 0),
   }))
 
+  // vista del grafico: tutte le spese del mese, solo carta o solo portafoglio (stesso filtro della lista)
+  const viewExpenses = payFilter ? monthExpenses.filter((e) => paymentOf(e) === payFilter) : monthExpenses
+  const viewTotal = viewExpenses.reduce((s, e) => s + e.amount, 0)
+  const viewByCategory = categories.map((c) => ({
+    ...c,
+    value: viewExpenses.filter((e) => e.categoryId === c.id).reduce((s, e) => s + e.amount, 0),
+  }))
   const walletExpenses = monthExpenses.filter((e) => paymentOf(e) === 'portafoglio')
   const walletTotal = walletExpenses.reduce((s, e) => s + e.amount, 0)
   const walletByCategory = categories.map((c) => ({
@@ -241,29 +248,38 @@ export default function App() {
         </div>
 
 
-        <PieChart data={byCategory} total={total} selected={filter} onSelect={(id) => { setFilter(id); setPayFilter(null) }} />
-        <p className="pay-split">
-          <span className="ps-item"><b>Carta</b> {formatEur(total - walletTotal)}</span><span className="ps-sep" aria-hidden="true">·</span><span className="ps-item"><b>Portafoglio</b> {formatEur(walletTotal)}</span>
-        </p>
-      </section>
-            </>),
-            portafoglio: (<>
-      <section className="card wallet-card">
-        <div className="card-head">
-          <h2 className="with-icon"><PaymentIcon id="portafoglio" size={24} /> Portafoglio · {monthLabel(month)}</h2>
-          {walletExpenses.length > 0 && (
-            <button type="button" className="link" onClick={() => { setPayFilter('portafoglio'); setFilter(null) }}>
-              Vedi in lista
+        <div className="pay-seg" role="radiogroup" aria-label="Quali spese mostrare">
+          {[[null, 'Tutte', null], ['carta', 'Carta', 'carta'], ['portafoglio', 'Portafoglio', 'portafoglio']].map(([id, label, icon]) => (
+            <button key={label} type="button" role="radio" aria-checked={payFilter === id} className={payFilter === id ? 'on' : ''} onClick={() => { setPayFilter(id); setFilter(null) }}>
+              {icon && <PaymentIcon id={icon} size={18} />}{label}
             </button>
-          )}
+          ))}
         </div>
         <PieChart
-          data={walletByCategory}
-          hideEmpty
-          total={walletTotal}
-          selected={payFilter === 'portafoglio' ? filter : null}
-          onSelect={(id) => { setFilter(id); setPayFilter(id ? 'portafoglio' : null) }}
+          data={viewByCategory}
+          total={viewTotal}
+          centerLabel={payFilter === 'carta' ? 'Con carta' : payFilter === 'portafoglio' ? 'Dal portafoglio' : 'Totale del mese'}
+          selected={filter}
+          onSelect={(id) => setFilter(id)}
         />
+        {total > 0 && (
+          <div className="split-bar" aria-label="Come hai pagato le spese del mese">
+            <div className="split-track">
+              {[['carta', total - walletTotal], ['portafoglio', walletTotal]].filter(([, v]) => v > 0).map(([id, v]) => (
+                <button key={id} type="button" className={`split-seg ${id} ${payFilter === id ? 'on' : ''} ${payFilter && payFilter !== id ? 'dim' : ''}`}
+                  style={{ flexGrow: v }} onClick={() => { setPayFilter(payFilter === id ? null : id); setFilter(null) }}
+                  aria-label={`${PAYMENTS[id].label}: ${formatEur(v)}, ${Math.round((v / total) * 100)}% del mese`} />
+              ))}
+            </div>
+            <div className="split-legend">
+              {[['carta', total - walletTotal], ['portafoglio', walletTotal]].map(([id, v]) => (
+                <span key={id} className={`split-item ${id}`}>
+                  <i aria-hidden="true" /><b>{PAYMENTS[id].label}</b> {formatEur(v)} <small>{Math.round((v / total) * 100)}%</small>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
             </>),
             aggiungi: (<>

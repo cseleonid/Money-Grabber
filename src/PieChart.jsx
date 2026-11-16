@@ -24,7 +24,7 @@ function arcPath(a0, a1) {
   return `M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${INNER},${INNER} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-export default function PieChart({ data, total, selected, onSelect, hideEmpty = false }) {
+export default function PieChart({ data, total, selected, onSelect, hideEmpty = false, centerLabel = 'Totale' }) {
   const [hover, setHover] = useState(null)
   const slices = data.filter((d) => d.value > 0)
 
@@ -75,7 +75,7 @@ export default function PieChart({ data, total, selected, onSelect, hideEmpty = 
               </>
             ) : (
               <>
-                <text x={C} y={C - 4} textAnchor="middle" className="pie-center-sub">Totale</text>
+                <text x={C} y={C - 4} textAnchor="middle" className="pie-center-sub">{centerLabel}</text>
                 <text x={C} y={C + 18} textAnchor="middle" className="pie-center-main">{formatEur(total)}</text>
               </>
             )}
