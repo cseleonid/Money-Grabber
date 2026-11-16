@@ -5,8 +5,7 @@ import { useRef, useState } from 'react'
 // - trascina     → sposti il riquadro direttamente sopra o sotto gli altri
 export const BOXES = [
   { id: 'grafico', name: 'Grafico spese' },
-  { id: 'aggiungi', name: 'Aggiungi spesa' },
-  { id: 'lista', name: 'Lista spese' },
+  { id: 'lista', name: 'Spese e aggiungi spesa' },
   { id: 'superflue', name: 'Spese superflue' },
 ]
 

@@ -305,13 +305,6 @@ export default function App() {
         )}
       </section>
             </>),
-            aggiungi: (<>
-      <AddWizard
-        categories={categories}
-        payments={PAYMENTS}
-        onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
-      />
-            </>),
             lista: (<>
       <section className="card">
         <div className="card-head">
@@ -365,6 +358,13 @@ export default function App() {
             })}
           </ul>
         )}
+        <div className="list-add-sep" aria-hidden="true" />
+        <AddWizard
+          embedded
+          categories={categories}
+          payments={PAYMENTS}
+          onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
+        />
       </section>
             </>),
             superflue: (<>

@@ -1174,3 +1174,6 @@ body { transition: none !important; }
 .pay-seg button { flex: 0 0 auto; padding: 10px 18px; gap: 8px; font-size: .95rem; }
 .pay-seg button.on { background: var(--series-1); color: #fff; box-shadow: none; }
 @media (max-width: 380px) { .pay-seg button { padding: 9px 13px; font-size: .88rem; } }
+/* aggiungi spesa dentro la scheda della lista, in fondo */
+.wizard-embedded { padding: 0 !important; background: none; border-radius: 0; }
+.list-add-sep { height: 1px; background: var(--border); margin: var(--gap-block) 0; }

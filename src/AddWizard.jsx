@@ -17,7 +17,7 @@ function isoShift(days) {
 const fmtDate = (iso) =>
   new Date(iso + 'T00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })
 
-export default function AddWizard({ categories, payments, onAdd }) {
+export default function AddWizard({ categories, payments, onAdd, embedded = false }) {
   const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), noDate: false, description: '', superflua: false })
   const [step, setStep] = useState(1)
   const [d, setD] = useState(blank)
@@ -78,7 +78,7 @@ export default function AddWizard({ categories, payments, onAdd }) {
   }
 
   return (
-    <section className={`card wizard ${nudge ? 'nudge' : ''}`} aria-labelledby="wizard-title" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <section className={`${embedded ? 'wizard-embedded' : 'card'} wizard ${nudge ? 'nudge' : ''}`} aria-labelledby="wizard-title" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <span className="wizard-step" aria-live="polite">Passaggio {step} di {TOTAL}</span>
       <div className="wizard-dots" role="tablist" aria-label="Passaggi">
         {STEPS.map((label, i) => {
