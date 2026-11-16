@@ -1122,3 +1122,5 @@ body { transition: none !important; }
 .list-create { background: none !important; padding: 12px 0; font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; }
 .list-create .plus { background: var(--surface); }
 @media (max-width: 420px) { .list-create { font-size: 1.6rem; } }
+/* pannelli: niente linea colorata sul bordo superiore */
+.scope-app, .scope-screen, .scope-list { border-top: none !important; }
