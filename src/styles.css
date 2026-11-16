@@ -1177,3 +1177,28 @@ body { transition: none !important; }
 /* aggiungi spesa dentro la scheda della lista, in fondo */
 .wizard-embedded { padding: 0 !important; background: none; border-radius: 0; }
 .list-add-sep { height: 1px; background: var(--border); margin: var(--gap-block) 0; }
+
+/* titoli dei box: sempre centrati e grandi, uguali in tutto il sito (come "Aggiungi spesa") */
+.card > h2, .card-head h2, .card .mini-title, .wizard h2#wizard-title, .card h2.month-title {
+  font-size: 2rem !important; font-weight: 800 !important; line-height: 1.15; text-align: center; justify-content: center; text-wrap: balance; margin: 0;
+}
+@media (max-width: 420px) { .card > h2, .card-head h2, .card .mini-title, .wizard h2#wizard-title { font-size: 1.6rem !important; } }
+.card-head { flex-direction: column; align-items: center !important; justify-content: center; gap: 6px; text-align: center; }
+.card-head h2 small { display: block; font-size: .95rem; font-weight: 600; color: var(--text-2); }
+.card-head .link { font-size: .95rem; }
+.mini-title { flex-wrap: wrap; }
+
+/* Spese superflue: sfondo colorato pieno */
+.superflue {
+  background: #f2a516 !important;
+  --text: #1f1a0e; --text-2: #4b3d18; --text-3: #6e5a28; --border: #d98f0a; --bg: #f7c04e; --tint: #f9cf73; --surface: #f7c04e;
+  color: var(--text);
+}
+.superflue .super-stats > div { background: #f7c04e; }
+.superflue .icon-chip { background: #f9cf73; }
+.superflue .check input[type="checkbox"] { background: #d98f0a; }
+.superflue .check input[type="checkbox"]:checked { background: #1f1a0e; }
+.superflue .badge { background: #1f1a0e; color: #f7c04e; }
+.chip.nodate { background: var(--tint); color: var(--accent); }
+.chip.nodate.on { background: var(--accent); color: #fff; }
+.card > .card-head { margin-bottom: var(--gap-item); }

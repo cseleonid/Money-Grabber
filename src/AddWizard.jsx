@@ -158,25 +158,27 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
 
       {step === 4 && (
         <div className="wizard-form date-step">
-          <div className={`chips ${d.noDate ? 'off' : ''}`}>
+          <div className="chips">
             {[['Oggi', 0], ['Ieri', -1], ['2 giorni fa', -2]].map(([label, n]) => (
               <button
                 key={label}
                 type="button"
-                disabled={d.noDate}
                 className={`chip ${!d.noDate && d.date === isoShift(n) ? 'on' : ''}`}
                 onClick={() => choose({ date: isoShift(n), noDate: false }, 5)}
               >
                 {label}
               </button>
             ))}
+            <button
+              type="button"
+              className={`chip nodate ${d.noDate ? 'on' : ''}`}
+              onClick={() => choose({ noDate: true, date: todayISO() }, 5)}
+            >
+              Non ricordo la data
+            </button>
           </div>
-          <label className={`field-label ${d.noDate ? 'off' : ''}`} htmlFor="wiz-date">Oppure scegli una data</label>
-          <input id="wiz-date" type="date" className="field" disabled={d.noDate} value={d.date} onChange={(e) => e.target.value && setD({ ...d, date: e.target.value })} />
-          <label className="check flag">
-            <input type="checkbox" checked={!!d.noDate} onChange={(e) => setD({ ...d, noDate: e.target.checked, date: e.target.checked ? todayISO() : d.date })} />
-            Non ricordo la data
-          </label>
+          <label className="field-label" htmlFor="wiz-date">Oppure scegli una data</label>
+          <input id="wiz-date" type="date" className="field" value={d.date} onChange={(e) => e.target.value && setD({ ...d, date: e.target.value, noDate: false })} />
           <button type="button" className="primary" onClick={() => setStep(5)}>Avanti</button>
         </div>
       )}
