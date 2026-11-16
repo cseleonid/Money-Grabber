@@ -1118,3 +1118,7 @@ body { transition: none !important; }
 /* Elimina lista: niente riquadro, solo testo rosso in grassetto */
 .sheet-danger, .sheet-danger.armed { background: none !important; color: var(--series-8) !important; font-weight: 800; padding: 10px; width: auto; align-self: center; }
 .sheet-danger.armed { text-decoration: underline; text-underline-offset: 4px; }
+/* Crea lista: niente riquadro, solo il "+" tondo e il titolo grande */
+.list-create { background: none !important; padding: 12px 0; font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; }
+.list-create .plus { background: var(--surface); }
+@media (max-width: 420px) { .list-create { font-size: 1.6rem; } }
