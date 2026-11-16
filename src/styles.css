@@ -1214,3 +1214,9 @@ body { transition: none !important; }
 .super-stats > div { align-items: center; text-align: center; justify-content: center; }
 .hint, .empty-msg, .set-intro, .set-note, .shop-empty { text-align: center; }
 .superflue .hint { margin-top: var(--gap-item); }
+/* scheda unica del mese: grafico → categorie → spese → riquadro "aggiungi" */
+.in-card-sec { margin-top: var(--gap-block); padding-top: var(--gap-block); border-top: 1px solid var(--border); }
+.add-inner-box { margin-top: var(--gap-block); padding: var(--card-pad); border-radius: 26px; background: var(--bg); }
+.add-inner-box .wizard .choice, .add-inner-box .wizard .field, .add-inner-box .amount-field, .add-inner-box .summary, .add-inner-box .chip { background: var(--surface) !important; }
+.add-inner-box .wizard .choice.suggested { background: var(--tint) !important; }
+.add-inner-box .chip.on { background: var(--accent) !important; }

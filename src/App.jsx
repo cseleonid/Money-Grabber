@@ -303,11 +303,8 @@ export default function App() {
             </div>
           </div>
         )}
-      </section>
-            </>),
-            lista: (<>
-      <section className="card">
-        <div className="card-head">
+        <div className="in-card-sec">
+        <div className="card-head sub-head">
           <h2>
             Lista spese {filter && <small>· {catById[filter]?.name}</small>}
             {payFilter && <small> · {PAYMENTS[payFilter].label}</small>}
@@ -358,7 +355,8 @@ export default function App() {
             })}
           </ul>
         )}
-        <div className="list-add-sep" aria-hidden="true" />
+        </div>
+        <div className="add-inner-box">
         <AddWizard
           embedded
           history={expenses}
@@ -366,6 +364,7 @@ export default function App() {
           payments={PAYMENTS}
           onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
         />
+        </div>
       </section>
             </>),
             superflue: (<>
