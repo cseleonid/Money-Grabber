@@ -361,6 +361,7 @@ export default function App() {
         <div className="list-add-sep" aria-hidden="true" />
         <AddWizard
           embedded
+          history={expenses}
           categories={categories}
           payments={PAYMENTS}
           onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}

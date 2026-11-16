@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { CategoryIcon, PaymentIcon } from './icons.jsx'
 import { formatEur, todayISO, uid } from './data.js'
+import { suggestCategory } from './autoCategory.js'
 
 // Inserimento spesa a passaggi:
 // 1 Carta/Portafoglio → 2 Categoria → 3 Importo → 4 Data → 5 Riepilogo e conferma
@@ -17,7 +18,7 @@ function isoShift(days) {
 const fmtDate = (iso) =>
   new Date(iso + 'T00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })
 
-export default function AddWizard({ categories, payments, onAdd, embedded = false }) {
+export default function AddWizard({ categories, payments, onAdd, embedded = false, history = [] }) {
   const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), noDate: false, description: '', superflua: false })
   const [step, setStep] = useState(1)
   const [d, setD] = useState(blank)
@@ -119,21 +120,43 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
         </>
       )}
 
-      {step === 2 && (
-        <div className="choice-grid">
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className={`choice ${d.categoryId === c.id ? 'on' : ''}`}
-              onClick={() => choose({ categoryId: c.id, superflua: false }, 3)}
-            >
-              <CategoryIcon id={c.id} slot={c.slot} size={32} />
-              <span>{c.name}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      {step === 2 && (() => {
+        const sug = suggestCategory(d.description, history, categories.map((c) => c.id))
+        const sugCat = categories.find((c) => c.id === sug)
+        return (
+          <>
+            <div className="auto-cat">
+              <input
+                className="field"
+                placeholder="Cosa hai comprato? (es. Pizza, Benzina, Netflix)"
+                value={d.description}
+                onChange={(e) => setD({ ...d, description: e.target.value })}
+                onKeyDown={(e) => { if (e.key === 'Enter' && sugCat) { e.preventDefault(); choose({ categoryId: sugCat.id, superflua: false }, 3) } }}
+                aria-label="Cosa hai comprato"
+              />
+              {sugCat && (
+                <button type="button" className="auto-use" onClick={() => choose({ categoryId: sugCat.id, superflua: false }, 3)}>
+                  <CategoryIcon id={sugCat.id} slot={sugCat.slot} size={22} /> Usa: <b>{sugCat.name}</b>
+                </button>
+              )}
+            </div>
+            <div className="choice-grid">
+              {categories.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={`choice ${d.categoryId === c.id ? 'on' : ''} ${sug === c.id ? 'suggested' : ''}`}
+                  onClick={() => choose({ categoryId: c.id, superflua: false }, 3)}
+                >
+                  {sug === c.id && <span className="sug-badge">Suggerita</span>}
+                  <CategoryIcon id={c.id} slot={c.slot} size={32} />
+                  <span>{c.name}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )
+      })()}
 
       {step === 3 && (
         <form
