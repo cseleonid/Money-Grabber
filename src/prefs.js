@@ -18,3 +18,15 @@ export function applyTheme(theme) {
   else if (hostTheme) el.setAttribute('data-theme', hostTheme)
   else el.removeAttribute('data-theme')
 }
+
+// hook: ricarica la vista quando una preferenza cambia
+import { useEffect, useState } from 'react'
+export function usePrefs() {
+  const [p, setP] = useState(getPrefs)
+  useEffect(() => {
+    const on = () => setP(getPrefs())
+    window.addEventListener('mg-prefs', on)
+    return () => window.removeEventListener('mg-prefs', on)
+  }, [])
+  return [p, (patch) => { setPrefs(patch); window.dispatchEvent(new Event('mg-prefs')) }]
+}

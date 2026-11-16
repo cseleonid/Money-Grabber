@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { uid } from '../data.js'
 import { ProductIcon, groupFor, groupRank } from './productIcons.jsx'
-import { SORTS } from './ShoppingSettings.jsx'
-import { getPrefs } from '../prefs.js'
+import { SORTS } from './ShoppingSheets.jsx'
+import { usePrefs } from '../prefs.js'
+import { Ico, I } from '../Sheet.jsx'
 
 // Schermata di una lista: prodotti come riquadri con icona; tocco = comprato.
 // I comprati finiscono in "Utilizzato per ultimo": un tocco li rimette in lista.
@@ -19,7 +20,7 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
   const [localSort, setLocalSort] = useState('recent')
   const sort = list.virtual ? localSort : (list.sort || 'recent')
   const setSort = (id) => (list.virtual ? setLocalSort(id) : store?.patchItem('shl', list.id, { sort: id }))
-  const { view, group } = getPrefs()
+  const [{ view, group }] = usePrefs()
   const [sortOpen, setSortOpen] = useState(false)
   const [menu, setMenu] = useState(false)
   const [recentOpen, setRecentOpen] = useState(true)
@@ -104,23 +105,9 @@ export default function ShoppingDetail({ list, items: all, store, onBack, avatar
           <span aria-hidden="true">‹</span> Le mie liste
         </button>
         {!list.virtual && (
-          <div className="shop-menu-wrap">
-            <button type="button" className="round-btn" onClick={() => { setMenu((v) => !v); setConfirmDel(false) }} aria-label="Altre azioni" aria-expanded={menu}>
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5.5" r="1.8" /><circle cx="12" cy="12" r="1.8" /><circle cx="12" cy="18.5" r="1.8" /></svg>
-            </button>
-            {menu && (
-              <div className="pop-menu" role="menu">
-                <button type="button" role="menuitem" onClick={() => { setMenu(false); onSettings?.() }}>Impostazioni lista</button>
-                <button type="button" role="menuitem" onClick={() => { setRenaming(true); setMenu(false) }}>Rinomina lista</button>
-                <button type="button" role="menuitem" className="danger" onClick={() => {
-                  if (!confirmDel) { setConfirmDel(true); return }
-                  items.forEach((i) => store?.removeItem('shop', i.id))
-                  store?.removeItem('shl', list.id)
-                  onBack()
-                }}>{confirmDel ? 'Tocca di nuovo per eliminare' : 'Elimina lista'}</button>
-              </div>
-            )}
-          </div>
+          <button type="button" className="round-btn scope-list-btn" onClick={() => onSettings?.()} aria-label="Impostazioni di questa lista">
+            <Ico d={I.sliders} />
+          </button>
         )}
       </div>
 

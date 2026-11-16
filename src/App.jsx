@@ -5,6 +5,8 @@ import AddWizard from './AddWizard.jsx'
 import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
 import { applyTheme, getPrefs } from './prefs.js'
+import AppSheet from './AppSheet.jsx'
+import { Ico, I } from './Sheet.jsx'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
@@ -34,6 +36,7 @@ export default function App() {
   // sezione corrente (mini-sito) dal pallino 🐙, sincronizzata con #hash
   const [section, setSection] = useState(sectionFromHash)
   const [octoOpen, setOctoOpen] = useState(false)
+  const [appSheet, setAppSheet] = useState(false)
   useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
@@ -445,6 +448,10 @@ export default function App() {
                 <span className="octo-name">{x.name}</span>
               </button>
             ))}
+            <button type="button" className="octo-item octo-settings" onClick={() => { setOctoOpen(false); setAppSheet(true) }}>
+              <span className="octo-emoji" aria-hidden="true"><Ico d={I.gear} size={22} /></span>
+              <span className="octo-name">Impostazioni</span>
+            </button>
           </nav>
         )}
         <button
@@ -461,6 +468,7 @@ export default function App() {
           <OctoIcon size={30} />
         </button>
       </div>
+      {appSheet && <AppSheet onClose={() => setAppSheet(false)} />}
     </div>
   )
 }
