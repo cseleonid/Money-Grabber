@@ -1103,3 +1103,18 @@ body { transition: none !important; }
 .tc-label { margin-top: 2px; }
 .sheet-title, .page-head h1, .lists-top h1 { margin: 0; }
 .sheet-danger { margin-top: 0 !important; }
+
+/* ===== colori pieni, niente sfumature =====
+   ogni tema ha un solo colore (g1 = g2), quindi schede, pallini e selezioni sono a tinta unita */
+.lc-pesca   { --g1: #ef7a1f; --g2: #ef7a1f; }  /* arancione: Spesa per la casa */
+.lc-sole    { --g1: #d99a0b; --g2: #d99a0b; }  /* Fai da te */
+.lc-lavanda { --g1: #8a6bd8; --g2: #8a6bd8; }  /* Animali */
+.lc-cielo   { --g1: #3b7ddd; --g2: #3b7ddd; }  /* Tempo libero */
+.lc-menta   { --g1: #23966d; --g2: #23966d; }  /* Altro */
+.list-card, .list-banner, .tc-circle, .swatch-btn, .theme-chip.on,
+.scope-list .scope-chip, .scope-list .icon-choice button.on { background: var(--g1) !important; }
+.theme-chip.on { background: none !important; }
+.list-name { text-shadow: none; }
+/* Elimina lista: niente riquadro, solo testo rosso in grassetto */
+.sheet-danger, .sheet-danger.armed { background: none !important; color: var(--series-8) !important; font-weight: 800; padding: 10px; width: auto; align-self: center; }
+.sheet-danger.armed { text-decoration: underline; text-underline-offset: 4px; }
