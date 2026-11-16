@@ -1220,3 +1220,11 @@ body { transition: none !important; }
 .add-inner-box .wizard .choice, .add-inner-box .wizard .field, .add-inner-box .amount-field, .add-inner-box .summary, .add-inner-box .chip { background: var(--surface) !important; }
 .add-inner-box .wizard .choice.suggested { background: var(--tint) !important; }
 .add-inner-box .chip.on { background: var(--accent) !important; }
+/* scheda del mese senza sfondo: tutto sul fondo della pagina, tranne "Aggiungi spesa" e le superflue */
+.card-flat { background: none !important; box-shadow: none !important; padding-left: 4px !important; padding-right: 4px !important; }
+.movable.selected > .card-flat { box-shadow: none !important; transform: none; }
+.card-flat .in-card-sec { border-top-color: var(--surface); }
+.card-flat .pay-seg button:not(.on) { background: var(--surface); }
+.add-inner-box { background: var(--surface); }
+.add-inner-box .wizard .choice, .add-inner-box .wizard .field, .add-inner-box .amount-field, .add-inner-box .summary, .add-inner-box .chip { background: var(--bg) !important; }
+.card-flat .icon-chip { background: var(--surface); }

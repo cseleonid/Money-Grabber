@@ -226,7 +226,7 @@ export default function App() {
           onChange={(l) => store.current?.setLayout(l)}
           blocks={{
             grafico: (<>
-      <section className="card">
+      <section className="card card-flat">
         <div className="card-head month-head">
           <span className="month-prefix">Spese di</span>
           <div className="month-dd" ref={monthDdRef}>
