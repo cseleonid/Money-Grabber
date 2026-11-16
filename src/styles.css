@@ -1089,3 +1089,17 @@ body { transition: none !important; }
   .mini-add:has(.date) .grow, .mini-add:has(.time) .grow { flex: 1 1 100%; }
   .mini-add .date, .mini-add .time { flex: 1 1 auto; max-width: none; }
 }
+
+/* ===== spaziatura uguale tra i blocchi (regola unica per tutto il sito) =====
+   --gap-block: tra un blocco e l'altro · --gap-item: tra elementi dello stesso blocco */
+:root { --gap-block: 24px; --gap-item: 12px; }
+.main, .shop-detail, .set-page, .sheet, .mini-card, .wizard, .list-create-form, .custom-panel { gap: var(--gap-block) !important; }
+.sheet-sec, .cat-rows, .shop-recent, .prod-group, .sheet-people, .box-toggles { gap: var(--gap-item) !important; }
+.theme-pick { gap: var(--gap-block) var(--gap-item) !important; }
+.icon-choice, .choice-grid, .prod-grid, .custom-grid, .theme-list, .set-menu { gap: var(--gap-item) !important; }
+.mini-add, .shop-add, .sheet-add-person, .row-btns, .page-actions { gap: var(--gap-item) !important; }
+.list-card { gap: var(--gap-item); }
+.sheet-sec h3 { margin-bottom: 2px; }
+.tc-label { margin-top: 2px; }
+.sheet-title, .page-head h1, .lists-top h1 { margin: 0; }
+.sheet-danger { margin-top: 0 !important; }
