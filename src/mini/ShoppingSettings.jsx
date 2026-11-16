@@ -3,7 +3,7 @@ import { getPrefs, setPrefs } from '../prefs.js'
 
 // Impostazioni della Lista della spesa:
 // menu → Visualizzazione lista · Tema · Impostazioni lista (scelta lista → Personalizza lista)
-const LIST_COLORS = ['pesca', 'lavanda', 'menta', 'cielo', 'sole']
+import { THEMES, themeOf, ThemeBadge, ThemePicker } from './listThemes.jsx'
 export const SORTS = [
   { id: 'recent', label: 'Ordine di inserimento', hint: 'Prima i prodotti aggiunti per primi' },
   { id: 'az', label: 'Alfabetico A–Z', hint: 'In ordine di nome' },
@@ -40,7 +40,7 @@ const PhonePreview = ({ mode }) => (
   </span>
 )
 
-export default function ShoppingSettings({ start, lists, items, store, onClose, onDeleted, deco }) {
+export default function ShoppingSettings({ start, lists, items, store, onClose, onDeleted }) {
   // start: 'menu' oppure { list: id } per aprire direttamente le impostazioni di una lista
   const [screen, setScreen] = useState(start)
   // attenzione: le stringhe hanno .sub (metodo storico di JS), quindi si controlla che sia un oggetto
@@ -175,16 +175,16 @@ export default function ShoppingSettings({ start, lists, items, store, onClose, 
   }
 
   if (obj.sub === 'name') {
-    return <NameAndImage list={list} store={store} onBack={back} deco={deco} />
+    return <NameAndTheme list={list} store={store} onBack={back} />
   }
 
   // Personalizza lista
   return (
     <div className="set-page">
       <Header title="Impostazioni lista" onBack={back} />
-      <div className={`list-banner big lc-${list.color || 'pesca'}`}>
+      <div className={`list-banner big lc-${themeOf(list).color}`}>
+        <ThemeBadge theme={themeOf(list)} />
         <h2>{list.name}</h2>
-        {deco}
       </div>
       <section className="custom-panel">
         <Svg size={34}>{ICON.gear}</Svg>
@@ -193,7 +193,7 @@ export default function ShoppingSettings({ start, lists, items, store, onClose, 
           <button type="button" onClick={() => setScreen({ list: list.id, sub: 'order' })}><Svg>{ICON.order}</Svg>Ordine</button>
           <button type="button" onClick={() => setScreen('view')}><Svg>{ICON.view}</Svg>Visualizzazione</button>
           <button type="button" onClick={() => setScreen({ list: list.id, sub: 'members' })}><Svg>{ICON.members}</Svg>Membri della lista</button>
-          <button type="button" onClick={() => setScreen({ list: list.id, sub: 'name' })}><Svg>{ICON.pen}</Svg>Nome e immagine</button>
+          <button type="button" onClick={() => setScreen({ list: list.id, sub: 'name' })}><Svg>{ICON.pen}</Svg>Nome e tema</button>
         </div>
       </section>
       <button type="button" className={`danger-btn ${confirmDel ? 'armed' : ''}`} onClick={() => {
@@ -208,25 +208,23 @@ export default function ShoppingSettings({ start, lists, items, store, onClose, 
   )
 }
 
-function NameAndImage({ list, store, onBack, deco }) {
+function NameAndTheme({ list, store, onBack }) {
   const [name, setName] = useState(list.name)
-  const [color, setColor] = useState(list.color || 'pesca')
+  const [theme, setTheme] = useState(themeOf(list).id)
+  const t = THEMES.find((x) => x.id === theme)
   const save = (e) => {
     e.preventDefault()
     if (!name.trim()) return
-    store?.patchItem('shl', list.id, { name: name.trim(), color })
+    store?.patchItem('shl', list.id, { name: name.trim(), theme, color: t.color })
     onBack()
   }
   return (
     <form className="set-page" onSubmit={save}>
-      <Header title="Nome e immagine" onBack={onBack} />
-      <div className={`list-banner big lc-${color}`}><h2>{name || ' '}</h2>{deco}</div>
+      <Header title="Nome e tema" onBack={onBack} />
+      <div className={`list-banner big lc-${t.color}`}><ThemeBadge theme={t} /><h2>{name || ' '}</h2></div>
       <input className="field big-field" value={name} onChange={(e) => setName(e.target.value)} aria-label="Nome della lista" />
-      <div className="color-pick" role="radiogroup" aria-label="Colore e immagine">
-        {LIST_COLORS.map((c) => (
-          <button key={c} type="button" role="radio" aria-checked={color === c} aria-label={c} className={`swatch-btn big lc-${c} ${color === c ? 'on' : ''}`} onClick={() => setColor(c)} />
-        ))}
-      </div>
+      <p className="set-intro">Tema della lista</p>
+      <ThemePicker value={theme} onChange={setTheme} />
       <button type="submit" className="primary" disabled={!name.trim()}>Salva</button>
     </form>
   )

@@ -952,3 +952,17 @@ input, select, textarea, .field, .add-form input, .add-form select,
   .custom-grid button { min-height: 88px; font-size: .92rem; }
 }
 body { transition: none !important; }
+
+/* temi delle liste (al posto delle illustrazioni) */
+.theme-badge { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: 999px; background: rgba(255,255,255,.28); color: #fff; font-size: .8rem; font-weight: 700; letter-spacing: .01em; }
+.list-card .theme-badge { margin-bottom: -4px; }
+.list-banner .theme-badge { align-self: flex-start; }
+.theme-pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.theme-chip { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: none; border-radius: 18px; background: var(--bg); color: var(--text); font-weight: 600; text-align: left; cursor: pointer; }
+.theme-chip svg { flex-shrink: 0; width: 34px; height: 34px; padding: 6px; border-radius: 999px; color: #fff; background: linear-gradient(115deg, var(--g1), var(--g2)); }
+.theme-chip.on { background: linear-gradient(115deg, var(--g1), var(--g2)); color: #fff; }
+.theme-chip.on svg { background: rgba(255,255,255,.28); }
+.theme-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.list-create-form .theme-pick { margin-top: 2px; }
+.set-page .theme-chip:not(.on) { background: var(--surface); }
+.list-name { padding-right: 64px; }

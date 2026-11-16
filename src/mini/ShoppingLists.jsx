@@ -5,23 +5,7 @@ import ShoppingSettings from './ShoppingSettings.jsx'
 
 // 🛒 "Le mie liste": ogni lista della spesa è una scheda colorata con titolo,
 // numero di articoli da comprare, persone della lista e freccia per aprirla.
-export const LIST_COLORS = ['pesca', 'lavanda', 'menta', 'cielo', 'sole']
-
-// Illustrazioni a linea (bianche, decorative) disegnate per l'app
-const DECO = {
-  carrello: <><path d="M3 4.5h2.2l2.2 10.2h10.4l1.9-7.4H6.3" /><circle cx="9" cy="19" r="1.3" /><circle cx="16.5" cy="19" r="1.3" /></>,
-  mela: <><path d="M12 7.5c-3-2.2-7.5-.2-7.5 4.6S8 21.2 12 19.3c4 1.9 7.5-2.4 7.5-7.2S15 5.3 12 7.5Z" /><path d="M12 7.5c0-2.2 1-3.7 3-4.4" /></>,
-  bottiglia: <path d="M10 2.8h4v3.4l2 3.1v10.9a1.6 1.6 0 0 1-1.6 1.6H9.6A1.6 1.6 0 0 1 8 20.2V9.3l2-3.1Z M8 13h8" />,
-  sacchetto: <><path d="M5 8h14l-1.2 12.5H6.2Z" /><path d="M9 8V6.2a3 3 0 0 1 6 0V8" /></>,
-  carota: <><path d="M4.5 19.5 14.8 9.2a3 3 0 0 0-4-4L4.5 19.5Z" /><path d="m14.8 9.2 4.2-3.7M13 7l2.6-3.8M16.8 11.2l3.7-2.4" /></>,
-}
-const DECO_SETS = [['mela', 'bottiglia', 'carota'], ['sacchetto', 'mela', 'carrello'], ['carota', 'sacchetto', 'bottiglia'], ['bottiglia', 'carrello', 'mela'], ['carrello', 'carota', 'sacchetto']]
-
-const Deco = ({ name, className }) => (
-  <svg className={`deco ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    {DECO[name]}
-  </svg>
-)
+import { THEMES, themeOf, ThemeBadge, ThemePicker } from './listThemes.jsx'
 
 const initials = (n) => n.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 const AV_COLORS = ['#2a78d6', '#1baf7a', '#eb6834', '#6250d6', '#e34948', '#eda100']
@@ -33,7 +17,7 @@ export default function ShoppingLists({ lists, items, store }) {
   const [editing, setEditing] = useState(false)
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState('')
-  const [newColor, setNewColor] = useState(LIST_COLORS[0])
+  const [newTheme, setNewTheme] = useState(THEMES[0].id)
   const [addingTo, setAddingTo] = useState(null)
   const [person, setPerson] = useState('')
   const [confirmDel, setConfirmDel] = useState(null)
@@ -50,7 +34,7 @@ export default function ShoppingLists({ lists, items, store }) {
     e.preventDefault()
     const name = newName.trim()
     if (!name) return
-    store?.addItem('shl', { id: uid(), name, color: newColor, members: [], created: Date.now() })
+    store?.addItem('shl', { id: uid(), name, theme: newTheme, color: THEMES.find((t) => t.id === newTheme).color, members: [], created: Date.now() })
     setNewName(''); setCreating(false)
   }
   const addPerson = (l) => (e) => {
@@ -68,10 +52,6 @@ export default function ShoppingLists({ lists, items, store }) {
   }
 
   const open = all.find((l) => l.id === openId)
-  const decoFor = (l) => {
-    const set = DECO_SETS[(LIST_COLORS.indexOf(l?.color) + 5) % DECO_SETS.length] || DECO_SETS[0]
-    return <><Deco name={set[0]} className="d1" /><Deco name={set[1]} className="d2" /><Deco name={set[2]} className="d3" /></>
-  }
   if (settings) {
     const l = settings.list ? lists.find((x) => x.id === settings.list) : null
     return (
@@ -80,7 +60,6 @@ export default function ShoppingLists({ lists, items, store }) {
         lists={lists}
         items={items}
         store={store}
-        deco={decoFor(l)}
         onClose={() => setSettings(null)}
         onDeleted={() => { setSettings(null); setOpenId(null) }}
       />
@@ -120,14 +99,12 @@ export default function ShoppingLists({ lists, items, store }) {
 
       {all.map((l, idx) => {
         const n = countOf(l.id)
-        const set = DECO_SETS[(LIST_COLORS.indexOf(l.color) + 5) % DECO_SETS.length] || DECO_SETS[idx % DECO_SETS.length]
+        const theme = themeOf(l)
         const members = l.members || []
         return (
-          <article key={l.id} className={`list-card lc-${l.color || 'pesca'}`}>
+          <article key={l.id} className={`list-card lc-${theme.color}`}>
             <button type="button" className="list-hit" onClick={() => !editing && setOpenId(l.id)} aria-label={`Apri ${l.name}`} disabled={editing} />
-            <Deco name={set[0]} className="d1" />
-            <Deco name={set[1]} className="d2" />
-            <Deco name={set[2]} className="d3" />
+            <ThemeBadge theme={theme} />
             <h2 className="list-name">{l.name}</h2>
             {n > 0 && <span className="pill">{n} {n === 1 ? 'articolo' : 'articoli'}</span>}
             <div className="list-people">
@@ -161,11 +138,7 @@ export default function ShoppingLists({ lists, items, store }) {
       {creating ? (
         <form className="card list-create-form" onSubmit={create}>
           <input className="field" autoFocus placeholder="Nome della lista (es. Spesa di casa)" value={newName} onChange={(e) => setNewName(e.target.value)} aria-label="Nome della lista" />
-          <div className="color-pick" role="radiogroup" aria-label="Colore">
-            {LIST_COLORS.map((c) => (
-              <button key={c} type="button" role="radio" aria-checked={newColor === c} aria-label={c} className={`swatch-btn lc-${c} ${newColor === c ? 'on' : ''}`} onClick={() => setNewColor(c)} />
-            ))}
-          </div>
+          <ThemePicker value={newTheme} onChange={setNewTheme} />
           <div className="row-btns">
             <button type="button" className="link" onClick={() => setCreating(false)}>Annulla</button>
             <button type="submit" className="primary" disabled={!newName.trim()}>Crea</button>
