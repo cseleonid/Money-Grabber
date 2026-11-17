@@ -1358,3 +1358,8 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .cat-row .cat-move .icon { width: 30px; height: 26px; font-size: .95rem; color: var(--text-3); }
 .cat-row .cat-move .icon:disabled { opacity: .25; }
 .box-row.off .box-name, .box-row.off .box-ico { opacity: .45; }
+/* maniglia per trascinare le categorie */
+.drag-handle { flex: none; width: 40px; height: 44px; display: grid; place-items: center; border: none; background: none; color: var(--text-3); cursor: grab; touch-action: none; border-radius: 12px; }
+.drag-handle:active { cursor: grabbing; color: var(--text); }
+.cat-row { transition: transform .15s ease; }
+.cat-row.dragging { transition: none; position: relative; z-index: 2; box-shadow: 0 8px 24px rgba(0,0,0,.18); }

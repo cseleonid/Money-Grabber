@@ -184,7 +184,7 @@ export default function App() {
   const moveCategory = (id, delta) => {
     const i = categories.findIndex((c) => c.id === id), j = i + delta
     if (i < 0 || j < 0 || j >= categories.length) return
-    const next = categories.slice(); [next[i], next[j]] = [next[j], next[i]]
+    const next = categories.slice(); const [c] = next.splice(i, 1); next.splice(j, 0, c)
     store.current?.setCategories(next)
   }
   const patchCategory = (id, patch) =>
