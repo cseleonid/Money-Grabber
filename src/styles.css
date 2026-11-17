@@ -1437,3 +1437,4 @@ body::after { display: none !important; }
 .exp-star { top: -10px !important; left: -18px !important; }
 /* importi della lista più grandi */
 .expense .expense-amount { font-size: 1.3rem !important; font-weight: 800 !important; }
+.expense-meta .pay-toggle { margin-left: 0; margin-right: 6px; }
