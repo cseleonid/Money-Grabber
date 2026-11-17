@@ -1409,3 +1409,5 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 /* il menù si apre subito sotto il + (allineato al suo bordo destro) */
 .add-float-wrap { display: block; padding: 0; overflow: hidden; }
 .add-float { position: fixed; width: min(calc(100vw - 32px), 420px); max-height: calc(100vh - 24px); overflow-y: auto; transform-origin: top right; border-radius: 28px; }
+/* mese e anno molto più grandi */
+.month-title-text { font-size: clamp(2.3rem, 10.5vw, 3.6rem) !important; letter-spacing: -0.02em; line-height: 1.05 !important; }
