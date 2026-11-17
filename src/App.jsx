@@ -346,7 +346,7 @@ export default function App() {
                         aria-label={`Pagato con ${paymentOf(e) === 'carta' ? 'carta' : 'portafoglio'}: tocca per cambiare`}
                         onPointerDown={(ev) => ev.stopPropagation()}
                         onClick={(ev) => { ev.stopPropagation(); patchExpense(e.id, { payment: paymentOf(e) === 'carta' ? 'portafoglio' : 'carta' }) }}>
-                        <PaymentIcon id={paymentOf(e)} size={14} />{paymentOf(e) === 'carta' ? 'Carta' : 'Portafoglio'}<span aria-hidden="true">⇄</span>
+                        <PaymentIcon id={paymentOf(e)} size={14} />{paymentOf(e) === 'carta' ? 'Carta' : 'Portafoglio'}
                       </button>
                       {isSuperflua(e) && <span className="badge">superflua</span>}
                     </span>
