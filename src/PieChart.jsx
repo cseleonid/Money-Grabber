@@ -40,7 +40,7 @@ function arcPath(a0, a1) {
   return `M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${INNER},${INNER} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-export default function PieChart({ data, total, selected, onSelect, onOpen, hideEmpty = false, centerLabel = 'Totale' }) {
+export default function PieChart({ data, total, selected, onSelect, onOpen, hideEmpty = false, centerLabel = 'Totale', showLegend = true }) {
   const [hover, setHover] = useState(null)
   const slices = data.filter((d) => d.value > 0)
 
@@ -71,7 +71,8 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
                 opacity: selected && selected !== a.id ? 0.35 : 1,
                 onMouseEnter: () => setHover(a),
                 onMouseLeave: () => setHover(null),
-                onClick: () => onSelect(selected === a.id ? null : a.id),
+                // primo tocco: mostra percentuale; secondo tocco sulla stessa fetta: apre la pagina della categoria
+                onClick: () => (selected === a.id && onOpen ? onOpen(a.id) : onSelect(a.id)),
               }
               const title = <title>{`${a.name}: ${formatEur(a.value)} (${((a.value / total) * 100).toFixed(1)}%)`}</title>
               return single ? (
@@ -87,6 +88,9 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
                   {((focus.value / total) * 100).toLocaleString('it-IT', { maximumFractionDigits: 1 })}%
                 </text>
                 <text x={C} y={C + 30} textAnchor="middle" className="pie-center-sub">{formatEur(focus.value)}</text>
+                {onOpen && selected === focus.id && (
+                  <text x={C} y={C + 52} textAnchor="middle" className="pie-center-open" onClick={() => onOpen(focus.id)}>Apri ›</text>
+                )}
               </>
             ) : (
               <>
@@ -98,7 +102,7 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
         )}
       </div>
 
-      <ul className="legend">
+      {showLegend && <ul className="legend">
         {/* prima le categorie usate, poi quelle vuote (ordine scelto mantenuto in ciascun gruppo) */}
         {(hideEmpty ? data.filter((d) => d.value > 0) : [...data.filter((d) => d.value > 0), ...data.filter((d) => d.value <= 0)]).map((d) => {
           return (
@@ -118,7 +122,7 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
             </li>
           )
         })}
-      </ul>
+      </ul>}
     </div>
   )
 }

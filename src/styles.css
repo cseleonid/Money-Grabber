@@ -1365,3 +1365,4 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .cat-row.dragging { transition: none; position: relative; z-index: 2; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
 /* 30px in più sopra il riquadro Aggiungi spesa */
 .movable:has(.wizard) { margin-top: 30px !important; }
+.pie-center-open { font-size: 13px; font-weight: 700; fill: var(--accent); cursor: pointer; }

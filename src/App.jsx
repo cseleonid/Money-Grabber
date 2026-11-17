@@ -287,6 +287,7 @@ export default function App() {
           selected={filter}
           onSelect={(id) => setFilter(id)}
           onOpen={(id) => { setCatPage(id); window.scrollTo?.({ top: 0 }) }}
+          showLegend={false}
         />
         {total > 0 && (
           <div className="split-bar" aria-label="Come hai pagato le spese del mese">
