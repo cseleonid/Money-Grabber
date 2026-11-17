@@ -152,10 +152,10 @@ export default function App() {
   // vista del grafico: tutte le spese del mese, solo carta o solo portafoglio (stesso filtro della lista)
   const viewExpenses = payFilter ? monthExpenses.filter((e) => paymentOf(e) === payFilter) : monthExpenses
   const viewTotal = viewExpenses.reduce((s, e) => s + e.amount, 0)
-  const viewByCategory = categories.map((c) => ({
-    ...c,
-    value: viewExpenses.filter((e) => e.categoryId === c.id).reduce((s, e) => s + e.amount, 0),
-  }))
+  const viewByCategory = categories.map((c) => {
+    const items = viewExpenses.filter((e) => e.categoryId === c.id).sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+    return { ...c, items, value: items.reduce((s, e) => s + e.amount, 0) }
+  })
   const walletExpenses = monthExpenses.filter((e) => paymentOf(e) === 'portafoglio')
   const walletTotal = walletExpenses.reduce((s, e) => s + e.amount, 0)
   const walletByCategory = categories.map((c) => ({
@@ -289,7 +289,7 @@ export default function App() {
           onOpen={(id) => { setCatPage(id); window.scrollTo?.({ top: 0 }) }}
           showLegend={false}
         />
-        {total > 0 && (
+        {false && total > 0 && ( // barra Carta/Portafoglio rimossa su richiesta
           <div className="split-bar" aria-label="Come hai pagato le spese del mese">
             <div className="split-track">
               {[['carta', total - walletTotal], ['portafoglio', walletTotal]].filter(([, v]) => v > 0).map(([id, v]) => (

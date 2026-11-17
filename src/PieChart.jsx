@@ -53,6 +53,7 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
   })
 
   const focus = hover ?? arcs.find((a) => a.id === selected) ?? null
+  const pop = focus && focus.items?.length > 0 ? focus : null
 
   return (
     <div className="pie-wrap">
@@ -81,7 +82,7 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
                 <path key={a.id} d={roundArc(a.a0, a.a1)} fill="none" stroke={`var(--series-${a.slot})`} strokeWidth={W} strokeLinecap="round" {...common}>{title}</path>
               )
             })}
-            {focus ? (
+            {pop ? null : focus ? (
               <>
                 <text x={C} y={C - 20} textAnchor="middle" className="pie-center-sub">{focus.name}</text>
                 <text x={C} y={C + 10} textAnchor="middle" className="pie-center-pct">
@@ -99,6 +100,23 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
               </>
             )}
           </svg>
+        )}
+        {pop && (
+          // piccolo menù al centro del grafico: in alto il nome della categoria, sotto la lista compatta delle spese
+          <div className="pie-pop" role="status">
+            <div className="pie-pop-head">
+              <CategoryIcon id={pop.id} slot={pop.slot} size={20} />
+              <strong>{pop.name}</strong>
+              <span className="pie-pop-pct">{((pop.value / total) * 100).toLocaleString('it-IT', { maximumFractionDigits: 0 })}%</span>
+            </div>
+            <ul>
+              {pop.items.slice(0, 4).map((e) => (
+                <li key={e.id}><span>{e.description || 'Spesa'}</span><b>{formatEur(e.amount)}</b></li>
+              ))}
+            </ul>
+            {pop.items.length > 4 && <p className="pie-pop-more">+ altre {pop.items.length - 4}</p>}
+            {onOpen && <button type="button" className="pie-pop-open" onClick={() => onOpen(pop.id)}>Apri ›</button>}
+          </div>
         )}
       </div>
 
