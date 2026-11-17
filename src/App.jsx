@@ -9,6 +9,7 @@ import AppSheet from './AppSheet.jsx'
 import { Ico, I, PageHeader } from './Sheet.jsx'
 import PersonaleSheet from './PersonaleSheet.jsx'
 import CategoryPage from './CategoryPage.jsx'
+import { useLongPressReveal } from './longPress.js'
 import CalendarView from './mini/CalendarView.jsx'
 import ShoppingLists from './mini/ShoppingLists.jsx'
 import TodoList from './mini/TodoList.jsx'
@@ -41,6 +42,7 @@ export default function App() {
   const [appSheet, setAppSheet] = useState(false)
   const [persSheet, setPersSheet] = useState(false)
   const [catPage, setCatPage] = useState(null) // categoria aperta in Personale
+  const lp = useLongPressReveal()
   useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
@@ -319,7 +321,7 @@ export default function App() {
               const c = catById[e.categoryId]
               const auto = !!c?.autoSuperflua
               return (
-                <li key={e.id} className="expense">
+                <li key={e.id} className={`expense ${lp.revealed === e.id ? 'revealed' : ''}`} {...lp.bind(e.id)}>
                   <span className="icon-chip"><CategoryIcon id={c?.id} slot={c?.slot} size={26} /></span>
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
@@ -339,20 +341,24 @@ export default function App() {
                     >
                       {isSuperflua(e) ? '★' : '☆'}
                     </button>
-                    <button
-                      type="button"
-                      className={`icon ${pendingDelete === e.id ? 'danger' : ''}`}
-                      title={pendingDelete === e.id ? 'Tocca di nuovo per eliminare' : 'Elimina'}
-                      onClick={() => removeExpense(e.id)}
-                    >
-                      {pendingDelete === e.id ? 'Elimina?' : '✕'}
-                    </button>
+                    {lp.revealed === e.id && (
+                      <button
+                        type="button"
+                        className={`icon del-btn ${pendingDelete === e.id ? 'danger' : ''}`}
+                        title={pendingDelete === e.id ? 'Tocca di nuovo per eliminare' : 'Elimina'}
+                        onClick={() => { removeExpense(e.id); if (pendingDelete === e.id) lp.hide() }}
+                        autoFocus
+                      >
+                        {pendingDelete === e.id ? 'Elimina?' : '✕'}
+                      </button>
+                    )}
                   </div>
                 </li>
               )
             })}
           </ul>
         )}
+        {listed.length > 0 && <p className="hint lp-hint">Tieni premuta una spesa per eliminarla</p>}
         </div>
       </section>
             </>),

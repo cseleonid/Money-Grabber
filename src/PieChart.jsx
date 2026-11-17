@@ -99,7 +99,8 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
       </div>
 
       <ul className="legend">
-        {(hideEmpty ? data.filter((d) => d.value > 0) : data).map((d) => {
+        {/* prima le categorie usate, poi quelle vuote (ordine scelto mantenuto in ciascun gruppo) */}
+        {(hideEmpty ? data.filter((d) => d.value > 0) : [...data.filter((d) => d.value > 0), ...data.filter((d) => d.value <= 0)]).map((d) => {
           return (
             <li key={d.id}>
               <button

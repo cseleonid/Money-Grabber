@@ -1,10 +1,12 @@
 import { CategoryIcon, PaymentIcon } from './icons.jsx'
 import { formatEur } from './data.js'
 import { Ico, I } from './Sheet.jsx'
+import { useLongPressReveal } from './longPress.js'
 
 // Pagina di una categoria: tutte le sue spese del mese, con totale e quota sul mese.
 export default function CategoryPage({ category, expenses, monthTotal, monthName, onBack, onToggleSuperflua, onRemove, isSuperflua, paymentOf, pendingDelete }) {
   const total = expenses.reduce((s, e) => s + e.amount, 0)
+  const lp = useLongPressReveal()
   const pct = monthTotal ? Math.round((total / monthTotal) * 100) : 0
   const sorted = expenses.slice().sort((a, b) => b.date.localeCompare(a.date))
   return (
@@ -25,7 +27,7 @@ export default function CategoryPage({ category, expenses, monthTotal, monthName
         ) : (
           <ul className="expense-list">
             {sorted.map((e) => (
-              <li key={e.id} className="expense">
+              <li key={e.id} className={`expense ${lp.revealed === e.id ? 'revealed' : ''}`} {...lp.bind(e.id)}>
                 <div className="expense-main">
                   <span className="expense-desc">{e.description}</span>
                   <span className="expense-meta">
@@ -39,14 +41,17 @@ export default function CategoryPage({ category, expenses, monthTotal, monthName
                   <button type="button" className="icon" disabled={!!category.autoSuperflua} onClick={() => onToggleSuperflua(e)} aria-label={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}>
                     {isSuperflua(e) ? '★' : '☆'}
                   </button>
-                  <button type="button" className={`icon ${pendingDelete === e.id ? 'danger' : ''}`} onClick={() => onRemove(e.id)} aria-label="Elimina">
-                    {pendingDelete === e.id ? 'Elimina?' : <Ico d={I.trash} size={18} />}
-                  </button>
+                  {lp.revealed === e.id && (
+                    <button type="button" className={`icon del-btn ${pendingDelete === e.id ? 'danger' : ''}`} onClick={() => { onRemove(e.id); if (pendingDelete === e.id) lp.hide() }} aria-label="Elimina" autoFocus>
+                      {pendingDelete === e.id ? 'Elimina?' : <Ico d={I.trash} size={18} />}
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
           </ul>
         )}
+        {sorted.length > 0 && <p className="hint lp-hint">Tieni premuta una spesa per eliminarla</p>}
       </section>
     </div>
   )
