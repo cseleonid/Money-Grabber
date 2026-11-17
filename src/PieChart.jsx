@@ -13,6 +13,22 @@ function polar(r, a) {
   return [C + r * Math.sin(a), C - r * Math.cos(a)]
 }
 
+// fette con le estremità arrotondate: arco disegnato come tratto con linecap tondo,
+// accorciato di metà spessore (+ un piccolo spazio) per non sovrapporsi alla fetta vicina
+const MID = (R + INNER) / 2
+const W = R - INNER
+const GAP = 3
+function roundArc(a0, a1, single) {
+  if (single) return null
+  const pad = (W / 2 + GAP / 2) / MID
+  let s = a0 + pad, e = a1 - pad
+  if (e <= s) { const m = (a0 + a1) / 2; s = m - 0.0005; e = m + 0.0005 } // fetta minuscola: un pallino
+  const large = e - s > Math.PI ? 1 : 0
+  const [x0, y0] = polar(MID, s)
+  const [x1, y1] = polar(MID, e)
+  return `M${x0},${y0} A${MID},${MID} 0 ${large} 1 ${x1},${y1}`
+}
+
 function arcPath(a0, a1) {
   // un'unica fetta al 100%: disegna due semicerchi
   if (a1 - a0 >= Math.PI * 2 - 1e-6) a1 = a0 + Math.PI * 2 - 1e-4
@@ -48,23 +64,22 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
           </svg>
         ) : (
           <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="pie-svg" role="img" aria-label="Spese per categoria">
-            {arcs.map((a) => (
-              <path
-                key={a.id}
-                d={arcPath(a.a0, a.a1)}
-                fill={`var(--series-${a.slot})`}
-                stroke="var(--surface)"
-                strokeWidth={2}
-                strokeLinejoin="round"
-                opacity={selected && selected !== a.id ? 0.35 : 1}
-                className="pie-slice"
-                onMouseEnter={() => setHover(a)}
-                onMouseLeave={() => setHover(null)}
-                onClick={() => onSelect(selected === a.id ? null : a.id)}
-              >
-                <title>{`${a.name}: ${formatEur(a.value)} (${((a.value / total) * 100).toFixed(1)}%)`}</title>
-              </path>
-            ))}
+            {arcs.map((a) => {
+              const single = arcs.length === 1
+              const common = {
+                className: 'pie-slice',
+                opacity: selected && selected !== a.id ? 0.35 : 1,
+                onMouseEnter: () => setHover(a),
+                onMouseLeave: () => setHover(null),
+                onClick: () => onSelect(selected === a.id ? null : a.id),
+              }
+              const title = <title>{`${a.name}: ${formatEur(a.value)} (${((a.value / total) * 100).toFixed(1)}%)`}</title>
+              return single ? (
+                <circle key={a.id} cx={C} cy={C} r={MID} fill="none" stroke={`var(--series-${a.slot})`} strokeWidth={W} {...common}>{title}</circle>
+              ) : (
+                <path key={a.id} d={roundArc(a.a0, a.a1)} fill="none" stroke={`var(--series-${a.slot})`} strokeWidth={W} strokeLinecap="round" {...common}>{title}</path>
+              )
+            })}
             {focus ? (
               <>
                 <text x={C} y={C - 20} textAnchor="middle" className="pie-center-sub">{focus.name}</text>

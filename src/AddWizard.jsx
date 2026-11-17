@@ -110,7 +110,6 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
 
       {step === 1 && (
         <>
-          <p className="hint wizard-q">{STEPS[0]}</p>
           <div className="choice-grid two">
             {Object.entries(payments).map(([k, p]) => (
               <button key={k} type="button" className={`choice big ${d.payment === k ? 'on' : ''}`} onClick={() => { setDone(null); choose({ payment: k }, 2) }}>

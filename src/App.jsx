@@ -228,8 +228,7 @@ export default function App() {
             grafico: (<>
       <section className="card card-flat">
         <div className="card-head month-head">
-          <span className="month-prefix">Spese di</span>
-          <div className="month-dd" ref={monthDdRef}>
+                    <div className="month-dd" ref={monthDdRef}>
             <button
               type="button"
               className={`month-title-btn ${showMonths ? 'on' : ''}`}
