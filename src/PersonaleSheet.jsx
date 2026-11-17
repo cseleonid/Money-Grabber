@@ -63,10 +63,6 @@ export default function PersonaleSheet({ categories, patchCategory, moveCategory
                 : drag && i < from && i >= drag.to ? { transform: `translateY(${drag.h}px)` } : undefined}>
               <CategoryIcon id={c.id} slot={c.slot} size={26} />
               <input className="field" value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label={`Nome categoria ${c.name}`} />
-              <label className="sw-labeled">
-                <input type="checkbox" role="switch" className="sw" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} aria-label={`${c.name} superflua`} />
-                <span>Superflua</span>
-              </label>
               <button type="button" className="drag-handle" aria-label={`Trascina per spostare ${c.name} (frecce su e giù da tastiera)`}
                 onPointerDown={onDown(c.id)} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => { ptr.current = null; setDrag(null) }}
                 onKeyDown={(e) => {

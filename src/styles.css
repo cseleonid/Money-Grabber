@@ -1413,3 +1413,10 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .month-title-text { font-size: clamp(2.3rem, 10.5vw, 3.6rem) !important; letter-spacing: -0.02em; line-height: 1.05 !important; }
 /* niente disegnini sullo sfondo */
 body::after { display: none !important; }
+/* interruttore "Spesa superflua" nel riepilogo della nuova spesa */
+.sup-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-radius: 18px; background: var(--bg); cursor: pointer; text-align: left; }
+.sup-text { display: flex; flex-direction: column; gap: 2px; }
+.sup-text small { font-size: .78rem; color: var(--text-3); }
+/* impostazioni schermata: solo icona, 5px più grande, senza tondo */
+.screen-tools .scope-screen-btn { background: none !important; box-shadow: none !important; color: var(--text) !important; }
+.screen-tools .scope-screen-btn svg { width: 27px; height: 27px; stroke: currentColor; }

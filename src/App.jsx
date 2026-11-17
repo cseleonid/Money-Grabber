@@ -137,7 +137,7 @@ export default function App() {
   const { expenses, categories } = state
   const catById = useMemo(() => Object.fromEntries(categories.map((c) => [c.id, c])), [categories])
 
-  const isSuperflua = (e) => e.superflua || !!catById[e.categoryId]?.autoSuperflua
+  const isSuperflua = (e) => (typeof e.superflua === 'boolean' ? e.superflua : !!catById[e.categoryId]?.autoSuperflua)
 
   const monthExpenses = useMemo(
     () => expenses.filter((e) => monthKey(e.date) === month).sort((a, b) => b.date.localeCompare(a.date)),
@@ -214,7 +214,7 @@ export default function App() {
             monthTotal={total}
             monthName={monthLabel(month)}
             onBack={() => { setCatPage(null); window.scrollTo?.({ top: 0 }) }}
-            onToggleSuperflua={(e) => patchExpense(e.id, { superflua: !e.superflua })}
+            onToggleSuperflua={(e) => patchExpense(e.id, { superflua: !isSuperflua(e) })}
             onRemove={removeExpense}
             isSuperflua={isSuperflua}
             paymentOf={paymentOf}
@@ -356,9 +356,8 @@ export default function App() {
                     <button
                       type="button"
                       className="icon"
-                      title={auto ? 'Superflua per categoria' : e.superflua ? 'Togli da superflue' : 'Segna come superflua'}
-                      disabled={auto}
-                      onClick={() => patchExpense(e.id, { superflua: !e.superflua })}
+                      title={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}
+                      onClick={() => patchExpense(e.id, { superflua: !isSuperflua(e) })}
                     >
                       {isSuperflua(e) ? '★' : '☆'}
                     </button>

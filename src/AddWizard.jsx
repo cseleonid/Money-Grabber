@@ -19,7 +19,7 @@ const fmtDate = (iso) =>
   new Date(iso + 'T00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })
 
 export default function AddWizard({ categories, payments, onAdd, embedded = false, history = [] }) {
-  const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), noDate: false, description: '', superflua: false })
+  const blank = () => ({ payment: null, categoryId: null, amount: '', date: todayISO(), noDate: false, description: '', superflua: null })
   const [step, setStep] = useState(1)
   const [d, setD] = useState(blank)
   const [done, setDone] = useState(null)
@@ -71,7 +71,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
       ...(d.noDate ? { noDate: true } : {}),
       categoryId: d.categoryId,
       payment: d.payment,
-      superflua: d.superflua,
+      superflua: d.superflua ?? auto,
       controllata: false,
     }
     onAdd(expense)
@@ -129,7 +129,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
         const sugCat = categories.find((c) => c.id === sug)
         // le categorie compaiono solo se servono: nessun suggerimento, oppure "Altra categoria"
         const gridVisible = showAll || (typed && !sugCat)
-        const pick = (id) => { setShowAll(false); choose({ categoryId: id, superflua: false }, 3) }
+        const pick = (id) => { setShowAll(false); choose({ categoryId: id, superflua: null }, 3) }
         return (
           <>
             <div className="auto-cat">
@@ -242,7 +242,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
                     key={c.id}
                     type="button"
                     className={`choice ${d.categoryId === c.id ? 'on' : ''} ${sug === c.id && d.categoryId !== c.id ? 'suggested' : ''}`}
-                    onClick={() => { setD({ ...d, categoryId: c.id, superflua: false }); setPickCat(false) }}
+                    onClick={() => { setD({ ...d, categoryId: c.id, superflua: null }); setPickCat(false) }}
                   >
                     {sug === c.id && d.categoryId !== c.id && <span className="sug-badge">Suggerita</span>}
                     <CategoryIcon id={c.id} slot={c.slot} size={28} />
@@ -260,14 +260,10 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
             value={d.description}
             onChange={(e) => setD({ ...d, description: e.target.value })}
           />
-          <label className="check">
-            <input
-              type="checkbox"
-              checked={d.superflua || auto}
-              disabled={auto}
-              onChange={(e) => setD({ ...d, superflua: e.target.checked })}
-            />
-            Superflua {auto && <small>(auto per categoria)</small>}
+          <label className="sup-row">
+            <span className="sup-text"><b>Spesa superflua</b><small>Finisce tra le spese da controllare</small></span>
+            <input type="checkbox" role="switch" className="sw" checked={d.superflua ?? auto}
+              onChange={(e) => setD({ ...d, superflua: e.target.checked })} aria-label="Spesa superflua" />
           </label>
           <button type="button" className="primary" onClick={confirm}>Aggiungi spesa</button>
         </div>

@@ -38,7 +38,7 @@ export default function CategoryPage({ category, expenses, monthTotal, monthName
                 </div>
                 <span className="expense-amount">{formatEur(e.amount)}</span>
                 <div className="expense-actions">
-                  <button type="button" className="icon" disabled={!!category.autoSuperflua} onClick={() => onToggleSuperflua(e)} aria-label={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}>
+                  <button type="button" className="icon" onClick={() => onToggleSuperflua(e)} aria-label={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}>
                     {isSuperflua(e) ? '★' : '☆'}
                   </button>
                   {lp.revealed === e.id && (
