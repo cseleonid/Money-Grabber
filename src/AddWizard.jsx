@@ -150,7 +150,6 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
                 </button>
               )}
               {typed && !sugCat && <p className="hint">Non la riconosco: scegli tu, la prossima volta me la ricordo.</p>}
-              {!typed && !showAll && <p className="hint">Scrivi cosa hai comprato e la categoria si sceglie da sola.</p>}
               {!gridVisible && (
                 <button type="button" className="link more-cats" onClick={() => setShowAll(true)}>
                   {sugCat ? 'Altra categoria' : 'Scegli dalla lista'}
