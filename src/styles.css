@@ -1363,3 +1363,5 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .drag-handle:active { cursor: grabbing; color: var(--text); }
 .cat-row { transition: transform .15s ease; }
 .cat-row.dragging { transition: none; position: relative; z-index: 2; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+/* 30px in più sopra il riquadro Aggiungi spesa */
+.movable:has(.wizard) { margin-top: 30px !important; }
