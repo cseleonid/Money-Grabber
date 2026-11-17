@@ -195,7 +195,7 @@ export default function App() {
     <div className="app">
       <div className="main">
         {section === 'personale' && !catPage && (
-          <PageHeader title="Le mie spese">
+          <PageHeader title="Le mie spese" icon={<SectionIcon id="personale" size={40} />}>
             <button type="button" className="round-btn scope-screen-btn" onClick={() => setPersSheet(true)} aria-label="Impostazioni di questa schermata">
               <Ico d={I.sliders} />
             </button>

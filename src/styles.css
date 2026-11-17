@@ -1330,3 +1330,23 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .list-toggle .lt-text { line-height: 1.1; }
 .list-toggle .count { min-width: 30px; height: 26px; padding: 0 10px; display: inline-grid; place-items: center; line-height: 1; font-size: .9rem; }
 .list-toggle .chev-d { display: block; }
+/* elenco categorie allineato orizzontalmente all'anello del grafico (stessi bordi sinistro e destro) */
+.pie-wrap { grid-template-columns: 1fr !important; }
+.pie-svg-wrap { width: 100%; display: flex; justify-content: center; }
+.pie-svg { width: min(100%, 440px) !important; max-width: none !important; margin: 0 auto !important; }
+.pie-wrap .legend { width: calc(min(100%, 440px) * 200 / 220 + 28px); max-width: 100%; margin-inline: auto; justify-self: center; }
+/* titolo pagina "Le mie spese": più grande, centrato, con icona e più spazio sotto */
+.page-head.page-head-big { display: grid; grid-template-columns: 44px 1fr 44px; padding: 16px 4px 28px; }
+.page-head.page-head-big::before { content: ""; }
+.page-head.page-head-big h1 { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: center; font-size: 2.6rem; }
+.page-head-ico { display: inline-flex; color: var(--accent); flex: none; }
+@media (max-width: 420px) { .page-head.page-head-big h1 { font-size: 2.1rem; gap: 10px; } .page-head-ico svg { width: 34px; height: 34px; } }
+/* titolo "Aggiungi spesa": più spazio sopra e sotto */
+.wizard h2#wizard-title { margin-top: 20px !important; margin-bottom: 24px !important; }
+/* Spese superflue: più respiro sopra e sotto */
+.card.superflue { padding-top: 32px !important; padding-bottom: 32px !important; }
+.superflue .card-head, .superflue > h2 { margin-bottom: 24px !important; }
+.superflue .super-stats { margin-bottom: 24px !important; }
+@media (max-width: 420px) { .page-head.page-head-big h1 { font-size: 1.95rem; overflow: visible; } .page-head.page-head-big { grid-template-columns: 36px 1fr 44px; } }
+.superflue .card-head { margin-top: 12px !important; }
+.superflue .super-stats + * { margin-top: 8px; }
