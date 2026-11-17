@@ -10,7 +10,7 @@ export default function CategoryPage({ category, expenses, monthTotal, monthName
   return (
     <div className="cat-page">
       <div className="shop-bar">
-        <button type="button" className="shop-back" onClick={onBack}><span aria-hidden="true">‹</span> Personale</button>
+        <button type="button" className="shop-back" onClick={onBack}><span aria-hidden="true">‹</span> Le mie spese</button>
       </div>
       <header className="cat-hero" style={{ '--c': `var(--series-${category.slot})` }}>
         <span className="cat-hero-icon"><CategoryIcon id={category.id} slot={category.slot} size={44} /></span>
