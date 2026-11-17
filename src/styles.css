@@ -1383,3 +1383,7 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 /* selettore Tutte / Carta / Portafoglio: più spaziato e con più aria sopra e sotto */
 .pay-seg { gap: 14px !important; margin-top: 32px !important; margin-bottom: 32px !important; }
 @media (max-width: 400px) { .pay-seg { gap: 10px !important; } }
+/* cambia pagamento direttamente dalla lista */
+.pay-toggle { display: inline-flex; align-items: center; gap: 4px; margin-left: 2px; padding: 3px 9px; border: none; border-radius: 999px; background: var(--tint); color: var(--text-2); font: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; vertical-align: middle; }
+.pay-toggle span { color: var(--accent); font-weight: 700; }
+.pay-toggle:active { transform: scale(.96); }

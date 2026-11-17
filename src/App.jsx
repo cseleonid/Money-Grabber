@@ -335,7 +335,13 @@ export default function App() {
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
-                      {e.noDate ? 'senza data' : new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} · <PaymentIcon id={paymentOf(e)} size={14} />
+                      {e.noDate ? 'senza data' : new Date(e.date + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })} · {c?.name ?? '—'} ·
+                      <button type="button" className="pay-toggle" title="Tocca per cambiare il pagamento"
+                        aria-label={`Pagato con ${paymentOf(e) === 'carta' ? 'carta' : 'portafoglio'}: tocca per cambiare`}
+                        onPointerDown={(ev) => ev.stopPropagation()}
+                        onClick={(ev) => { ev.stopPropagation(); patchExpense(e.id, { payment: paymentOf(e) === 'carta' ? 'portafoglio' : 'carta' }) }}>
+                        <PaymentIcon id={paymentOf(e)} size={14} />{paymentOf(e) === 'carta' ? 'Carta' : 'Portafoglio'}<span aria-hidden="true">⇄</span>
+                      </button>
                       {isSuperflua(e) && <span className="badge">superflua</span>}
                     </span>
                   </div>
