@@ -40,7 +40,7 @@ function arcPath(a0, a1) {
   return `M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${INNER},${INNER} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-export default function PieChart({ data, total, selected, onSelect, onOpen, hideEmpty = false, centerLabel = 'Totale', showLegend = true }) {
+export default function PieChart({ data, total, selected, onSelect, onOpen, hideEmpty = false, centerLabel = 'Totale', showLegend = true, corner = null }) {
   const [hover, setHover] = useState(null)
   const slices = data.filter((d) => d.value > 0)
 
@@ -57,7 +57,7 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
 
   return (
     <div className="pie-wrap">
-      <div className="pie-svg-wrap">
+      <div className="pie-svg-wrap"><div className="pie-box">
         {total === 0 ? (
           <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="pie-svg" role="img" aria-label="Nessuna spesa">
             <circle cx={C} cy={C} r={(R + INNER) / 2} fill="none" stroke="var(--border)" strokeWidth={R - INNER} />
@@ -118,7 +118,8 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
             {onOpen && <button type="button" className="pie-pop-open" onClick={() => onOpen(pop.id)}>Apri ›</button>}
           </div>
         )}
-      </div>
+        {corner}
+      </div></div>
 
       {showLegend && <ul className="legend">
         {/* prima le categorie usate, poi quelle vuote (ordine scelto mantenuto in ciascun gruppo) */}

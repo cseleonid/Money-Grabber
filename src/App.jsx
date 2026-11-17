@@ -41,6 +41,7 @@ export default function App() {
   const [octoOpen, setOctoOpen] = useState(false)
   const [appSheet, setAppSheet] = useState(false)
   const [persSheet, setPersSheet] = useState(false)
+  const [addOpen, setAddOpen] = useState(false)
   const [catPage, setCatPage] = useState(null) // categoria aperta in Personale
   const lp = useLongPressReveal()
   const [uiPrefs, setUiPrefs] = usePrefs()
@@ -194,13 +195,6 @@ export default function App() {
   return (
     <div className="app">
       <div className="main">
-        {section === 'personale' && !catPage && (
-          <PageHeader title="Le mie spese" icon={<SectionIcon id="personale" size={40} />}>
-            <button type="button" className="round-btn scope-screen-btn" onClick={() => setPersSheet(true)} aria-label="Impostazioni di questa schermata">
-              <Ico d={I.sliders} />
-            </button>
-          </PageHeader>
-        )}
         {['calendario', 'todo', 'condivise'].includes(section) && <PageHeader title={current.name} />}
         {section === 'calendario' && <CalendarView items={state.lists?.cal || []} store={store.current} />}
         {section === 'spesa' && <ShoppingLists lists={state.lists?.shl || []} items={state.lists?.shop || []} store={store.current} />}
@@ -288,6 +282,11 @@ export default function App() {
           onSelect={(id) => setFilter(id)}
           onOpen={(id) => { setCatPage(id); window.scrollTo?.({ top: 0 }) }}
           showLegend={false}
+          corner={(
+            <button type="button" className="pie-add" aria-label="Aggiungi spesa" aria-expanded={addOpen} onClick={() => setAddOpen(true)}>
+              <Ico d={<path d="M12 5v14M5 12h14" />} size={26} />
+            </button>
+          )}
         />
         {false && total > 0 && ( // barra Carta/Portafoglio rimossa su richiesta
           <div className="split-bar" aria-label="Come hai pagato le spese del mese">
@@ -378,14 +377,6 @@ export default function App() {
         </div>
       </section>
             </>),
-            aggiungi: (<>
-      <AddWizard
-        history={expenses}
-        categories={categories}
-        payments={PAYMENTS}
-        onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)) }}
-      />
-            </>),
             superflue: (<>
       <section className="card superflue">
         <div className="card-head">
@@ -462,6 +453,12 @@ export default function App() {
                 <span className="octo-name">{x.name}</span>
               </button>
             ))}
+            {section === 'personale' && (
+              <button type="button" className="octo-item octo-settings" onClick={() => { setOctoOpen(false); setPersSheet(true) }}>
+                <span className="octo-emoji" aria-hidden="true"><Ico d={I.sliders} size={22} /></span>
+                <span className="octo-name">Questa schermata</span>
+              </button>
+            )}
             <button type="button" className="octo-item octo-settings" onClick={() => { setOctoOpen(false); setAppSheet(true) }}>
               <span className="octo-emoji" aria-hidden="true"><Ico d={I.gear} size={22} /></span>
               <span className="octo-name">Impostazioni</span>
@@ -487,6 +484,20 @@ export default function App() {
           setLayout={(l) => store.current?.setLayout(l)} onClose={() => setPersSheet(false)} />
       )}
       {appSheet && <AppSheet onClose={() => setAppSheet(false)} />}
+      {addOpen && (
+        // piccolo menù fluttuante per aggiungere una spesa, aperto dal + accanto al grafico
+        <div className="add-float-wrap" onClick={(ev) => { if (ev.target === ev.currentTarget) setAddOpen(false) }}>
+          <div className="add-float" role="dialog" aria-modal="true" aria-label="Aggiungi spesa">
+            <button type="button" className="add-float-x" onClick={() => setAddOpen(false)} aria-label="Chiudi"><Ico d={I.close} size={18} /></button>
+            <AddWizard
+              history={expenses}
+              categories={categories}
+              payments={PAYMENTS}
+              onAdd={(e) => { store.current?.addExpense(e); setMonth(monthKey(e.date)); setAddOpen(false) }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
