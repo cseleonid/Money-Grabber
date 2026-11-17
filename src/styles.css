@@ -1420,3 +1420,5 @@ body::after { display: none !important; }
 /* impostazioni schermata: solo icona, 5px più grande, senza tondo */
 .screen-tools .scope-screen-btn { background: none !important; box-shadow: none !important; color: var(--text) !important; }
 .screen-tools .scope-screen-btn svg { width: 27px; height: 27px; stroke: currentColor; }
+/* più spazio sopra la Lista spese */
+.card-flat .in-card-sec { margin-top: 44px !important; padding-top: 40px !important; }
