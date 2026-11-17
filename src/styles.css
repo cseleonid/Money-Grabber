@@ -1435,3 +1435,5 @@ body::after { display: none !important; }
 /* più spazio attorno alla stellina */
 #expense-list .expense { padding-left: 30px !important; padding-top: 20px !important; }
 .exp-star { top: -10px !important; left: -18px !important; }
+/* importi della lista più grandi */
+.expense .expense-amount { font-size: 1.3rem !important; font-weight: 800 !important; }
