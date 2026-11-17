@@ -6,8 +6,8 @@ const RULES = [
   ['trasporti', /benzin|carburant|diesel|gasolio|treno|trenitalia|italo|\bbus\b|autobus|metro|taxi|uber|autostrad|telepass|parchegg|bollo|meccanico|gomme|monopattino/],
   ['salute', /farmac|medic|dentist|visita|analisi|ottic|ospedal|ticket|fisioterap|psicolog/],
   ['abbonamenti', /netflix|spotify|disney|prime|amazon prime|abbonament|palestra|dazn|now tv|sky|youtube premium|icloud|google one|apple music/],
-  ['svago', /asporto|pizz|sushi|kebab|hamburger|burger|deliveroo|glovo|just ?eat|ristorant|trattoria|osteria|\bbar\b|aperitiv|caff[eè] al bar|cinema|concert|teatro|museo|viaggi|hotel|vacanz|gelat|pub\b|discoteca|libr[oi]|videogioc/],
-  ['alimentari', /spesa|supermerc|esselunga|coop|conad|lidl|carrefour|eurospin|pam\b|despar|penny|aldi|md\b|panett|pane|frutta|verdura|macelleria|pescheria|mercato|alimentar|latte|uova/],
+  ['svago', /ristorant|trattoria|osteria|\bbar\b|aperitiv|caff[eè] al bar|cinema|concert|teatro|museo|viaggi|hotel|vacanz|gelat|pub\b|discoteca|libr[oi]|videogioc/],
+  ['alimentari', /asporto|pizz|sushi|kebab|piadin|hamburger|burger|poke|deliveroo|glovo|just ?eat|rosticceria|spesa|supermerc|esselunga|coop|conad|lidl|carrefour|eurospin|pam\b|despar|penny|aldi|md\b|panett|pane|frutta|verdura|macelleria|pescheria|mercato|alimentar|latte|uova/],
 ]
 
 const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim()

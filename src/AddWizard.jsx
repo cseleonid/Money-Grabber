@@ -24,6 +24,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
   const [d, setD] = useState(blank)
   const [done, setDone] = useState(null)
   const [pickCat, setPickCat] = useState(false)
+  const [showAll, setShowAll] = useState(false)
   const amountRef = useRef(null)
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
     setDone(expense)
     setD(blank())
     setPickCat(false)
+    setShowAll(false)
     setStep(1)
   }
 
@@ -122,39 +124,49 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
       )}
 
       {step === 2 && (() => {
+        const typed = d.description.trim().length >= 2
         const sug = suggestCategory(d.description, history, categories.map((c) => c.id))
         const sugCat = categories.find((c) => c.id === sug)
+        // le categorie compaiono solo se servono: nessun suggerimento, oppure "Altra categoria"
+        const gridVisible = showAll || (typed && !sugCat)
+        const pick = (id) => { setShowAll(false); choose({ categoryId: id, superflua: false }, 3) }
         return (
           <>
             <div className="auto-cat">
               <input
                 className="field"
-                placeholder="Cosa hai comprato? (es. Pizza, Benzina, Netflix)"
+                autoFocus
+                placeholder="Cosa hai comprato?"
                 value={d.description}
                 onChange={(e) => setD({ ...d, description: e.target.value })}
-                onKeyDown={(e) => { if (e.key === 'Enter' && sugCat) { e.preventDefault(); choose({ categoryId: sugCat.id, superflua: false }, 3) } }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && sugCat) { e.preventDefault(); pick(sugCat.id) } }}
                 aria-label="Cosa hai comprato"
               />
               {sugCat && (
-                <button type="button" className="auto-use" onClick={() => choose({ categoryId: sugCat.id, superflua: false }, 3)}>
-                  <CategoryIcon id={sugCat.id} slot={sugCat.slot} size={22} /> Usa: <b>{sugCat.name}</b>
+                <button type="button" className="auto-pick" onClick={() => pick(sugCat.id)}>
+                  <CategoryIcon id={sugCat.id} slot={sugCat.slot} size={40} />
+                  <span><small>Categoria</small><b>{sugCat.name}</b></span>
+                  <span className="auto-pick-go">Usa ›</span>
+                </button>
+              )}
+              {typed && !sugCat && <p className="hint">Non la riconosco: scegli tu, la prossima volta me la ricordo.</p>}
+              {!typed && !showAll && <p className="hint">Scrivi cosa hai comprato e la categoria si sceglie da sola.</p>}
+              {!gridVisible && (
+                <button type="button" className="link more-cats" onClick={() => setShowAll(true)}>
+                  {sugCat ? 'Altra categoria' : 'Scegli dalla lista'}
                 </button>
               )}
             </div>
-            <div className="choice-grid">
-              {categories.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  className={`choice ${d.categoryId === c.id ? 'on' : ''} ${sug === c.id ? 'suggested' : ''}`}
-                  onClick={() => choose({ categoryId: c.id, superflua: false }, 3)}
-                >
-                  {sug === c.id && <span className="sug-badge">Suggerita</span>}
-                  <CategoryIcon id={c.id} slot={c.slot} size={32} />
-                  <span>{c.name}</span>
-                </button>
-              ))}
-            </div>
+            {gridVisible && (
+              <div className="choice-grid">
+                {categories.map((c) => (
+                  <button key={c.id} type="button" className={`choice ${d.categoryId === c.id ? 'on' : ''}`} onClick={() => pick(c.id)}>
+                    <CategoryIcon id={c.id} slot={c.slot} size={32} />
+                    <span>{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </>
         )
       })()}

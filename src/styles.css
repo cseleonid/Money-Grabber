@@ -1316,12 +1316,12 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .list-drawer { animation: drawer-in .2s ease-out; }
 @keyframes drawer-in { from { opacity: 0; transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .chev-d { transition: none; } .list-drawer { animation: none; } }
-/* torta allineata a destra con l'elenco delle categorie (può sbordare a sinistra)
-   anello = 200/220 del disegno; l'elenco finisce 14px prima del bordo del contenitore */
-.pie-wrap { grid-template-columns: 1fr !important; }
-.pie-svg-wrap { display: flex; justify-content: flex-end; }
-.pie-svg {
-  flex-shrink: 0; max-width: none !important; margin: 0 !important;
-  width: calc(min(100% - 28px, 520px) * 1.1) !important;
-  margin-right: calc(14px - min(100% - 28px, 520px) / 20) !important;
-}
+/* categoria: proposta automatica grande, griglia solo se serve */
+.auto-pick { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 72px; padding: 10px 18px; border: none; border-radius: 22px; background: var(--tint); color: var(--text); text-align: left; cursor: pointer; }
+.auto-pick span:not(.auto-pick-go) { flex: 1; display: flex; flex-direction: column; }
+.auto-pick small { color: var(--text-2); font-size: .8rem; }
+.auto-pick b { font-size: 1.2rem; }
+.auto-pick-go { padding: 8px 16px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; }
+.auto-pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.more-cats { align-self: center; font-weight: 600; }
+.auto-use { display: none !important; }
