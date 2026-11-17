@@ -195,6 +195,13 @@ export default function App() {
   return (
     <div className="app">
       <div className="main">
+        {section === 'personale' && !catPage && (
+          <div className="screen-tools">
+            <button type="button" className="round-btn scope-screen-btn" onClick={() => setPersSheet(true)} aria-label="Impostazioni di questa schermata">
+              <Ico d={I.sliders} />
+            </button>
+          </div>
+        )}
         {['calendario', 'todo', 'condivise'].includes(section) && <PageHeader title={current.name} />}
         {section === 'calendario' && <CalendarView items={state.lists?.cal || []} store={store.current} />}
         {section === 'spesa' && <ShoppingLists lists={state.lists?.shl || []} items={state.lists?.shop || []} store={store.current} />}

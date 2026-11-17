@@ -1401,3 +1401,8 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 /* niente barretta per spostare i riquadri: l'ordine si cambia da "Questa schermata" */
 .movable > .grip { display: none !important; }
 .main > .movable:first-child, .main > :first-child { margin-top: 16px; }
+/* pulsante impostazioni della schermata: in alto a destra, icona bianca */
+.screen-tools { display: flex; justify-content: flex-end; padding: 8px 4px 0; }
+.screen-tools .scope-screen-btn { width: 44px; height: 44px; background: var(--accent) !important; color: #fff !important; border: none; }
+.screen-tools .scope-screen-btn svg { stroke: #fff; }
+.screen-tools { margin-bottom: -52px; position: relative; z-index: 2; }
