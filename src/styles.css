@@ -1275,3 +1275,12 @@ body { transition: none !important; }
 @keyframes pop-in { from { transform: scale(.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .del-btn { animation: none; } .expense { transition: none; } }
 .lp-hint { margin: 8px 0 0; font-size: .8rem; color: var(--text-3); }
+/* Aggiungi spesa: niente vuoto ai lati, tutto occupa la larghezza del box */
+.wizard > *:not(.wizard-step):not(.wizard-dots) { max-width: none !important; }
+.choice-grid, .choice-grid.two, .choice-grid:not(.two) { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; justify-content: stretch; }
+@media (min-width: 560px) { .choice-grid:not(.two) { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; } }
+.choice, .choice.big, .choice-grid:not(.two) .choice { aspect-ratio: auto !important; min-height: 104px !important; }
+.choice.big { min-height: 120px !important; }
+.wizard .chips { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); }
+.wizard .chips .chip { justify-content: center; padding: 0 8px; }
+.wizard .chips .chip.nodate { grid-column: 1 / -1; }
