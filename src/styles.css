@@ -1406,3 +1406,6 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 .screen-tools .scope-screen-btn { width: 44px; height: 44px; background: var(--accent) !important; color: #fff !important; border: none; }
 .screen-tools .scope-screen-btn svg { stroke: #fff; }
 .screen-tools { margin-bottom: -52px; position: relative; z-index: 2; }
+/* il menù si apre subito sotto il + (allineato al suo bordo destro) */
+.add-float-wrap { display: block; padding: 0; overflow: hidden; }
+.add-float { position: fixed; width: min(calc(100vw - 32px), 420px); max-height: calc(100vh - 24px); overflow-y: auto; transform-origin: top right; border-radius: 28px; }

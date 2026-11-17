@@ -290,7 +290,7 @@ export default function App() {
           onOpen={(id) => { setCatPage(id); window.scrollTo?.({ top: 0 }) }}
           showLegend={false}
           corner={(
-            <button type="button" className="pie-add" aria-label="Aggiungi spesa" aria-expanded={addOpen} onClick={() => setAddOpen(true)}>
+            <button type="button" className="pie-add" aria-label="Aggiungi spesa" aria-expanded={!!addOpen} onClick={(ev) => { const r = ev.currentTarget.getBoundingClientRect(); setAddOpen({ top: r.bottom + 10, right: Math.max(16, window.innerWidth - r.right) }) }}>
               <Ico d={<path d="M12 5v14M5 12h14" />} size={26} />
             </button>
           )}
@@ -494,7 +494,8 @@ export default function App() {
       {addOpen && (
         // piccolo menù fluttuante per aggiungere una spesa, aperto dal + accanto al grafico
         <div className="add-float-wrap" onClick={(ev) => { if (ev.target === ev.currentTarget) setAddOpen(false) }}>
-          <div className="add-float" role="dialog" aria-modal="true" aria-label="Aggiungi spesa">
+          <div className="add-float" role="dialog" aria-modal="true" aria-label="Aggiungi spesa"
+            style={typeof addOpen === 'object' ? { top: addOpen.top, right: addOpen.right } : undefined}>
             <button type="button" className="add-float-x" onClick={() => setAddOpen(false)} aria-label="Chiudi"><Ico d={I.close} size={18} /></button>
             <AddWizard
               history={expenses}
