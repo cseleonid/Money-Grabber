@@ -23,6 +23,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
   const [step, setStep] = useState(1)
   const [d, setD] = useState(blank)
   const [done, setDone] = useState(null)
+  const [pickCat, setPickCat] = useState(false)
   const amountRef = useRef(null)
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
     onAdd(expense)
     setDone(expense)
     setD(blank())
+    setPickCat(false)
     setStep(1)
   }
 
@@ -210,10 +212,36 @@ export default function AddWizard({ categories, payments, onAdd, embedded = fals
         <div className="wizard-form">
           <dl className="summary">
             <div><dt>Pagamento</dt><dd><PaymentIcon id={d.payment} size={20} /> {payments[d.payment].label}</dd></div>
-            <div><dt>Categoria</dt><dd><CategoryIcon id={cat.id} slot={cat.slot} size={20} /> {cat.name}</dd></div>
+            <div>
+              <dt>Categoria</dt>
+              <dd>
+                <button type="button" className="sum-edit" onClick={() => setPickCat((v) => !v)} aria-expanded={pickCat}>
+                  <CategoryIcon id={cat.id} slot={cat.slot} size={20} /> {cat.name} <span className="sum-edit-hint">{pickCat ? 'Chiudi' : 'Cambia'}</span>
+                </button>
+              </dd>
+            </div>
             <div><dt>Importo</dt><dd className="num">{formatEur(amount)}</dd></div>
             <div><dt>Data</dt><dd>{d.noDate ? `Non ricordata · ${new Date(d.date + 'T00:00').toLocaleDateString('it-IT', { month: 'long' })}` : fmtDate(d.date)}</dd></div>
           </dl>
+          {pickCat && (() => {
+            const sug = suggestCategory(d.description, history, categories.map((c) => c.id))
+            return (
+              <div className="choice-grid sum-cats">
+                {categories.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={`choice ${d.categoryId === c.id ? 'on' : ''} ${sug === c.id && d.categoryId !== c.id ? 'suggested' : ''}`}
+                    onClick={() => { setD({ ...d, categoryId: c.id, superflua: false }); setPickCat(false) }}
+                  >
+                    {sug === c.id && d.categoryId !== c.id && <span className="sug-badge">Suggerita</span>}
+                    <CategoryIcon id={c.id} slot={c.slot} size={28} />
+                    <span>{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            )
+          })()}
           <label className="field-label" htmlFor="wiz-desc">Nota (facoltativa)</label>
           <input
             id="wiz-desc"
