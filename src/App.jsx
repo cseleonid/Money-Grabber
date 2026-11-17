@@ -4,7 +4,7 @@ import { CategoryIcon, PaymentIcon, SectionIcon, OctoIcon } from './icons.jsx'
 import AddWizard from './AddWizard.jsx'
 import MovableBoxes from './Movable.jsx'
 import { SECTIONS, sectionFromHash } from './sections.js'
-import { applyTheme, getPrefs } from './prefs.js'
+import { applyTheme, getPrefs, usePrefs } from './prefs.js'
 import AppSheet from './AppSheet.jsx'
 import { Ico, I, PageHeader } from './Sheet.jsx'
 import PersonaleSheet from './PersonaleSheet.jsx'
@@ -43,6 +43,8 @@ export default function App() {
   const [persSheet, setPersSheet] = useState(false)
   const [catPage, setCatPage] = useState(null) // categoria aperta in Personale
   const lp = useLongPressReveal()
+  const [uiPrefs, setUiPrefs] = usePrefs()
+  const listOpen = uiPrefs.listOpen !== false
   useEffect(() => { applyTheme(getPrefs().theme) }, [])
   const octoRef = useRef(null)
   useEffect(() => {
@@ -307,12 +309,18 @@ export default function App() {
         <div className="in-card-sec">
         <div className="card-head sub-head">
           <h2>
-            Lista spese {filter && <small>· {catById[filter]?.name}</small>}
+            <button type="button" className="list-toggle" onClick={() => setUiPrefs({ listOpen: !listOpen })} aria-expanded={listOpen} aria-controls="expense-list">
+              Lista spese <span className="count">{listed.length}</span>
+              <svg className={`chev-d ${listOpen ? 'open' : ''}`} viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            {filter && <small>· {catById[filter]?.name}</small>}
           </h2>
+          {!listOpen && listed.length > 0 && <p className="list-closed-sum">{listed.length} {listed.length === 1 ? 'spesa' : 'spese'} · {formatEur(listed.reduce((a, e) => a + e.amount, 0))}</p>}
           {filter && (
             <button type="button" className="link" onClick={() => setFilter(null)}>Mostra tutte</button>
           )}
         </div>
+        {listOpen && (<div id="expense-list" className="list-drawer">
         {listed.length === 0 ? (
           <p className="empty-msg">Nessuna spesa {filter || payFilter ? 'con questo filtro' : 'in questo mese'}.</p>
         ) : (
@@ -359,6 +367,7 @@ export default function App() {
           </ul>
         )}
         {listed.length > 0 && <p className="hint lp-hint">Tieni premuta una spesa per eliminarla</p>}
+        </div>)}
         </div>
       </section>
             </>),

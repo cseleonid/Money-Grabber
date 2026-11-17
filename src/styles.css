@@ -1306,3 +1306,13 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 @media (max-width: 560px) { .pie-wrap { grid-template-columns: 1fr !important; } .pie-svg { max-width: 100% !important; } }
 /* 30px di spazio in più sotto la scheda del mese */
 .movable:has(> .card-flat) { margin-bottom: 30px; }
+/* Lista spese a tendina */
+.list-toggle { display: inline-flex; align-items: center; gap: 10px; border: none; background: none; color: var(--text); font: inherit; cursor: pointer; padding: 4px 8px; border-radius: 14px; }
+.list-toggle:focus-visible { outline: 2px solid var(--accent); }
+.list-toggle .count { font-size: .9rem; }
+.chev-d { color: var(--text-2); transition: transform .2s; flex-shrink: 0; }
+.chev-d.open { transform: rotate(180deg); }
+.list-closed-sum { margin: 0; color: var(--text-2); font-size: .95rem; text-align: center; font-variant-numeric: tabular-nums; }
+.list-drawer { animation: drawer-in .2s ease-out; }
+@keyframes drawer-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .chev-d { transition: none; } .list-drawer { animation: none; } }
