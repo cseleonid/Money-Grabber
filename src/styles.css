@@ -1444,3 +1444,4 @@ body::after { display: none !important; }
 /* totale al centro del grafico più grande */
 .pie-center-main { font-size: 32px !important; font-weight: 800 !important; letter-spacing: -0.02em; }
 .pie-center-label { font-size: 9.5px !important; letter-spacing: .02em; }
+.exp-star { top: 0 !important; }
