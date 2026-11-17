@@ -95,8 +95,8 @@ export default function PieChart({ data, total, selected, onSelect, onOpen, hide
               </>
             ) : (
               <>
-                <text x={C} y={C - 4} textAnchor="middle" className="pie-center-sub">{centerLabel}</text>
-                <text x={C} y={C + 18} textAnchor="middle" className="pie-center-main">{formatEur(total)}</text>
+                <text x={C} y={C - 16} textAnchor="middle" className="pie-center-sub pie-center-label">{centerLabel}</text>
+                <text x={C} y={C + 20} textAnchor="middle" className="pie-center-main">{formatEur(total)}</text>
               </>
             )}
           </svg>
