@@ -1350,3 +1350,11 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 @media (max-width: 420px) { .page-head.page-head-big h1 { font-size: 1.95rem; overflow: visible; } .page-head.page-head-big { grid-template-columns: 36px 1fr 44px; } }
 .superflue .card-head { margin-top: 12px !important; }
 .superflue .super-stats + * { margin-top: 8px; }
+/* impostazioni Personale semplificate: interruttore con etichetta + frecce a destra */
+.sw-labeled { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: none; cursor: pointer; }
+.sw-labeled span { font-size: .7rem; font-weight: 600; color: var(--text-3); }
+.cat-row { padding: 8px 8px 8px 16px !important; border-radius: 18px !important; }
+.cat-row .cat-move { display: flex; flex-direction: column; gap: 2px; flex: none; }
+.cat-row .cat-move .icon { width: 30px; height: 26px; font-size: .95rem; color: var(--text-3); }
+.cat-row .cat-move .icon:disabled { opacity: .25; }
+.box-row.off .box-name, .box-row.off .box-ico { opacity: .45; }

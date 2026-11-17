@@ -36,10 +36,12 @@ export default function Sheet({ scope = 'screen', label, title, onClose, childre
       <div className={`sheet scope-${scope} ${color ? 'lc-' + color : ''}`}>
         <div className="sheet-grab" aria-hidden="true" />
         <div className="sheet-head">
-          <span className="scope-chip">
-            <Ico d={scope === 'app' ? I.gear : I.sliders} size={16} />
-            {label}
-          </span>
+          {label ? (
+            <span className="scope-chip">
+              <Ico d={scope === 'app' ? I.gear : I.sliders} size={16} />
+              {label}
+            </span>
+          ) : <span />}
           <button type="button" className="sheet-x" onClick={onClose} aria-label="Chiudi"><Ico d={I.close} size={18} /></button>
         </div>
         <h2 className="sheet-title">{title}</h2>

@@ -19,38 +19,42 @@ export default function PersonaleSheet({ categories, patchCategory, moveCategory
   }
   const toggleBox = (id) => setLayout({ order, hidden: hidden.includes(id) ? hidden.filter((x) => x !== id) : [...hidden, id] })
   return (
-    <Sheet scope="screen" label="Personale" title="Questa schermata" onClose={onClose}>
-      <Section icon={I.tag} title="Categorie · ↑↓ per l'ordine, pallino = superflua">
+    <Sheet scope="screen" title="Questa schermata" onClose={onClose}>
+      <Section icon={I.tag} title="Categorie">
         <div className="cat-rows">
           {categories.map((c, i) => (
             <div className="cat-row" key={c.id}>
+              <CategoryIcon id={c.id} slot={c.slot} size={26} />
+              <input className="field" value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label={`Nome categoria ${c.name}`} />
+              <label className="sw-labeled">
+                <input type="checkbox" role="switch" className="sw" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} aria-label={`${c.name} superflua`} />
+                <span>Superflua</span>
+              </label>
               <div className="cat-move">
                 <button type="button" className="icon" disabled={i === 0} onClick={() => moveCategory(c.id, -1)} aria-label={`Sposta su ${c.name}`}>↑</button>
                 <button type="button" className="icon" disabled={i === categories.length - 1} onClick={() => moveCategory(c.id, 1)} aria-label={`Sposta giù ${c.name}`}>↓</button>
               </div>
-              <CategoryIcon id={c.id} slot={c.slot} size={26} />
-              <input className="field" value={c.name} onChange={(e) => patchCategory(c.id, { name: e.target.value })} aria-label={`Nome categoria ${c.name}`} />
-              <label className="check" title="Superflua in automatico">
-                <input type="checkbox" checked={c.autoSuperflua} onChange={(e) => patchCategory(c.id, { autoSuperflua: e.target.checked })} aria-label={`${c.name} superflua in automatico`} />
-              </label>
             </div>
           ))}
         </div>
       </Section>
-      <Section icon={I.grid} title="Riquadri · ↑↓ per l'ordine, interruttore per mostrarli">
+      <Section icon={I.grid} title="Riquadri">
         <div className="cat-rows">
           {order.map((id, i) => {
             const on = !hidden.includes(id)
             const box = BOXES.find((b) => b.id === id)
             return (
               <div className={`cat-row box-row ${on ? '' : 'off'}`} key={id}>
+                <span className="box-ico"><Ico d={BOX_ICONS[id]} size={22} /></span>
+                <span className="box-name">{box.name}</span>
+                <label className="sw-labeled">
+                  <input type="checkbox" role="switch" className="sw" checked={on} onChange={() => toggleBox(id)} aria-label={`Mostra ${box.name}`} />
+                  <span>Visibile</span>
+                </label>
                 <div className="cat-move">
                   <button type="button" className="icon" disabled={i === 0} onClick={() => moveBox(id, -1)} aria-label={`Sposta su ${box.name}`}>↑</button>
                   <button type="button" className="icon" disabled={i === order.length - 1} onClick={() => moveBox(id, 1)} aria-label={`Sposta giù ${box.name}`}>↓</button>
                 </div>
-                <span className="box-ico"><Ico d={BOX_ICONS[id]} size={22} /></span>
-                <span className="box-name">{box.name}</span>
-                <input type="checkbox" role="switch" className="sw" checked={on} onChange={() => toggleBox(id)} aria-label={`Mostra ${box.name}`} />
               </div>
             )
           })}
