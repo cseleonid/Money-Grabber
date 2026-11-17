@@ -334,10 +334,18 @@ export default function App() {
           <ul className="expense-list">
             {listed.map((e) => {
               const c = catById[e.categoryId]
-              const auto = !!c?.autoSuperflua
               return (
                 <li key={e.id} className={`expense ${lp.revealed === e.id ? 'revealed' : ''}`} {...lp.bind(e.id)}>
-                  <span className="icon-chip"><CategoryIcon id={c?.id} slot={c?.slot} size={26} /></span>
+                  <span className="icon-chip exp-ico">
+                    <CategoryIcon id={c?.id} slot={c?.slot} size={30} />
+                    <button type="button" className={`exp-star ${isSuperflua(e) ? 'on' : ''}`}
+                      title={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}
+                      aria-label={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}
+                      onPointerDown={(ev) => ev.stopPropagation()}
+                      onClick={(ev) => { ev.stopPropagation(); patchExpense(e.id, { superflua: !isSuperflua(e) }) }}>
+                      {isSuperflua(e) ? '★' : '☆'}
+                    </button>
+                  </span>
                   <div className="expense-main">
                     <span className="expense-desc">{e.description}</span>
                     <span className="expense-meta">
@@ -353,14 +361,6 @@ export default function App() {
                   </div>
                   <span className="expense-amount">{formatEur(e.amount)}</span>
                   <div className="expense-actions">
-                    <button
-                      type="button"
-                      className="icon"
-                      title={isSuperflua(e) ? 'Togli da superflue' : 'Segna come superflua'}
-                      onClick={() => patchExpense(e.id, { superflua: !isSuperflua(e) })}
-                    >
-                      {isSuperflua(e) ? '★' : '☆'}
-                    </button>
                     {lp.revealed === e.id && (
                       <button
                         type="button"

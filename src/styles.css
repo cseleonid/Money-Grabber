@@ -1422,3 +1422,7 @@ body::after { display: none !important; }
 .screen-tools .scope-screen-btn svg { width: 27px; height: 27px; stroke: currentColor; }
 /* più spazio sopra la Lista spese */
 .card-flat .in-card-sec { margin-top: 44px !important; padding-top: 40px !important; }
+/* stellina "superflua" in alto a sinistra dell'icona della categoria; icona senza sfondo */
+.expense .exp-ico { position: relative; background: none !important; overflow: visible; }
+.exp-star { position: absolute; top: -8px; left: -8px; width: 24px; height: 24px; padding: 0; border: none; background: none; display: grid; place-items: center; font-size: 17px; line-height: 1; color: var(--text-3); cursor: pointer; }
+.exp-star.on { color: #f2a516; }
