@@ -310,7 +310,7 @@ export default function App() {
         <div className="card-head sub-head">
           <h2>
             <button type="button" className="list-toggle" onClick={() => setUiPrefs({ listOpen: !listOpen })} aria-expanded={listOpen} aria-controls="expense-list">
-              Lista spese <span className="count">{listed.length}</span>
+              <span className="lt-text">Lista spese</span><span className="count">{listed.length}</span>
               <svg className={`chev-d ${listOpen ? 'open' : ''}`} viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </button>
             {filter && <small>· {catById[filter]?.name}</small>}
