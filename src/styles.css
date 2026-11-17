@@ -1426,3 +1426,5 @@ body::after { display: none !important; }
 .expense .exp-ico { position: relative; background: none !important; overflow: visible; }
 .exp-star { position: absolute; top: -8px; left: -8px; width: 24px; height: 24px; padding: 0; border: none; background: none; display: grid; place-items: center; font-size: 17px; line-height: 1; color: var(--text-3); cursor: pointer; }
 .exp-star.on { color: #f2a516; }
+/* stellina più piccola e più staccata dall icona */
+.exp-star { top: -14px !important; left: -14px !important; width: 18px !important; height: 18px !important; font-size: 12px !important; }
