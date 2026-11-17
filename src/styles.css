@@ -1428,3 +1428,7 @@ body::after { display: none !important; }
 .exp-star.on { color: #f2a516; }
 /* stellina più piccola e più staccata dall icona */
 .exp-star { top: -14px !important; left: -14px !important; width: 18px !important; height: 18px !important; font-size: 12px !important; }
+/* stellina dentro il riquadro della spesa */
+#expense-list .expense { padding-left: 16px !important; }
+.exp-star { top: -12px !important; left: -12px !important; }
+.exp-star { top: -6px !important; left: -14px !important; } #expense-list .expense { padding-top: 14px !important; }
